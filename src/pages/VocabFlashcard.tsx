@@ -94,14 +94,14 @@ function KanjiPopup({
 function ClickableKanji({
   text,
   kanjiList,
+  onKanjiClick,
   className = "",
 }: {
   text: string
   kanjiList?: KanjiInfo[]
+  onKanjiClick: (info: KanjiInfo) => void
   className?: string
 }) {
-  const [popup, setPopup] = useState<KanjiInfo | null>(null)
-
   if (!kanjiList || kanjiList.length === 0) {
     return <span className={className}>{text}</span>
   }
@@ -109,30 +109,27 @@ function ClickableKanji({
   const kanjiMap = new Map(kanjiList.map((k) => [k.character, k]))
 
   return (
-    <>
-      <span className={className}>
-        {Array.from(text).map((char, idx) => {
-          const info = kanjiMap.get(char)
-          if (info) {
-            return (
-              <span
-                key={idx}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setPopup(info)
-                }}
-                className="cursor-pointer rounded-lg transition-all duration-200 hover:bg-honey/40 hover:px-1"
-                title={`${info.hanViet} — bấm để xem chi tiết`}
-              >
-                {char}
-              </span>
-            )
-          }
-          return <span key={idx}>{char}</span>
-        })}
-      </span>
-      {popup && <KanjiPopup info={popup} onClose={() => setPopup(null)} />}
-    </>
+    <span className={className}>
+      {Array.from(text).map((char, idx) => {
+        const info = kanjiMap.get(char)
+        if (info) {
+          return (
+            <span
+              key={idx}
+              onClick={(e) => {
+                e.stopPropagation()
+                onKanjiClick(info)
+              }}
+              className="cursor-pointer rounded-lg transition-all duration-200 hover:bg-honey/40 hover:px-1"
+              title={`${info.hanViet} — bấm để xem chi tiết`}
+            >
+              {char}
+            </span>
+          )
+        }
+        return <span key={idx}>{char}</span>
+      })}
+    </span>
   )
 }
 
@@ -157,6 +154,7 @@ export default function VocabFlashcard({
   const [showModeSelect, setShowModeSelect] = useState(false)
   const [words, setWords] = useState<VocabWord[]>([])
   const [loading, setLoading] = useState(true)
+  const [popup, setPopup] = useState<KanjiInfo | null>(null)
 
   useEffect(() => {
     const num = parseInt(unit.name.replace('Bài ', ''))
@@ -326,6 +324,7 @@ export default function VocabFlashcard({
                 <ClickableKanji
                   text={frontMain}
                   kanjiList={word.kanji}
+                  onKanjiClick={setPopup}
                   className="font-kana text-7xl font-black text-cream sm:text-8xl lg:text-9xl"
                 />
               ) : (
@@ -355,6 +354,7 @@ export default function VocabFlashcard({
                 <ClickableKanji
                   text={backMain}
                   kanjiList={word.kanji}
+                  onKanjiClick={setPopup}
                   className="font-kana text-7xl font-black text-white sm:text-8xl lg:text-9xl"
                 />
               ) : mode === "reading" ? (
@@ -427,6 +427,8 @@ export default function VocabFlashcard({
           </div>
         </div>
       </div>
+
+      {popup && <KanjiPopup info={popup} onClose={() => setPopup(null)} />}
     </div>
   )
 }
