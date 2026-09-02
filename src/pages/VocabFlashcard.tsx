@@ -50,7 +50,7 @@ function RadicalPopup({
       onClick={onClose}
     >
       <div
-        className="kanji-popup w-full max-w-sm rounded-[2.5rem] border-[5px] border-ink bg-cream p-8 shadow-[10px_12px_0_0_#a78bfa] sm:p-10"
+        className="kanji-popup w-full max-w-sm rounded-[2.5rem] border-[5px] border-ink bg-cream p-8 shadow-[10px_12px_0_0_#f5a623] sm:p-10"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-center">
@@ -410,10 +410,9 @@ export default function VocabFlashcard({
             </div>
 
             <div
-              className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-[3rem] border-[5px] border-ink bg-ink p-8 text-cream [backface-visibility:hidden]"
+              className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-[3rem] border-[5px] border-ink bg-ink p-8 text-cream [backface-visibility:hidden] shadow-[10px_12px_0_0_#f5a623]"
               style={{
                 transform: "rotateY(180deg)",
-                boxShadow: `10px 12px 0 0 ${bookShadow}`,
               }}
             >
               {isBackKanji ? (
