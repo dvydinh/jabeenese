@@ -144,7 +144,6 @@ export default function VocabFlashcard({
   bookTitle,
   onBack,
 }: {
-}: {
   bookId: string
   unit: VocabUnit
   bookColor: string
