@@ -1,13 +1,17 @@
 import { useState } from "react"
 import beeImg from "./imports/bee.png"
+import JarSelection from "./pages/JarSelection"
+import VocabularyPage from "./pages/VocabularyPage"
+import VocabFlashcard from "./pages/VocabFlashcard"
+import type { VocabBook } from "./data/vocabData"
 
+type Page = "landing" | "jars" | "vocab" | "vocab-study"
 
 function Shine() {
   return (
     <span className="pointer-events-none absolute left-4 top-1 h-2.5 w-9 -rotate-6 rounded-full bg-white/70 blur-[1.5px]" />
   )
 }
-
 
 function JellyBee({ className = "" }: { className?: string }) {
   return (
@@ -19,7 +23,6 @@ function JellyBee({ className = "" }: { className?: string }) {
     />
   )
 }
-
 
 function wavePath(phase: number) {
   const N = 48
@@ -47,8 +50,7 @@ function HoneyMelt({ from, to }: { from: string; to: string }) {
   )
 }
 
-
-const cards = [
+const demoCards = [
   { kana: "あ", romaji: "a", word: "あめ", meaning: "rain / candy" },
   { kana: "き", romaji: "ki", word: "きって", meaning: "postage stamp" },
   { kana: "つ", romaji: "tsu", word: "つき", meaning: "the moon" },
@@ -56,14 +58,14 @@ const cards = [
   { kana: "は", romaji: "ha", word: "はな", meaning: "flower" },
 ]
 
-function Flashcard() {
+function DemoFlashcard() {
   const [i, setI] = useState(0)
   const [flipped, setFlipped] = useState(false)
-  const card = cards[i]
+  const card = demoCards[i]
 
   const next = () => {
     setFlipped(false)
-    setTimeout(() => setI((p) => (p + 1) % cards.length), 120)
+    setTimeout(() => setI((p) => (p + 1) % demoCards.length), 120)
   }
 
   return (
@@ -92,7 +94,7 @@ function Flashcard() {
 
       <div className="flex items-center gap-3">
         <div className="flex gap-1.5">
-          {cards.map((_, idx) => (
+          {demoCards.map((_, idx) => (
             <span
               key={idx}
               className={`h-2.5 rounded-full transition-all duration-300 ${
@@ -113,20 +115,18 @@ function Flashcard() {
   )
 }
 
-
 const paths = [
   { jp: "ひらがな", title: "Hiragana", desc: "The soft, round syllabary. Start here to sound out any word.", count: "46 signs", bg: "bg-cream" },
   { jp: "カタカナ", title: "Katakana", desc: "Angular kana for loanwords, names, and a little emphasis.", count: "46 signs", bg: "bg-honey-light" },
   { jp: "かんじ", title: "First Kanji", desc: "100 friendly characters, each with a bee-sized backstory.", count: "100 kanji", bg: "bg-cream" },
 ]
 
-export default function App() {
+function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const links = ["Learn", "Practice", "Hive", "About"]
 
   return (
     <div className="min-h-full w-full overflow-x-hidden bg-honey font-body text-ink">
-
       <header className="sticky top-0 z-30">
         <div className="bg-ink text-cream">
           <div className="flex items-center justify-between gap-4 px-5 py-3 sm:px-10">
@@ -144,7 +144,10 @@ export default function App() {
               ))}
             </nav>
             <div className="flex items-center gap-2">
-              <button className="relative hidden overflow-hidden rounded-full bg-honey px-6 py-2 font-display text-base font-bold text-ink shadow-[3px_3px_0_0_rgba(0,0,0,0.35)] transition-all hover:-translate-y-0.5 sm:block">
+              <button
+                onClick={onJoinHive}
+                className="relative hidden overflow-hidden rounded-full bg-honey px-6 py-2 font-display text-base font-bold text-ink shadow-[3px_3px_0_0_rgba(0,0,0,0.35)] transition-all hover:-translate-y-0.5 sm:block"
+              >
                 <Shine />
                 Start free
               </button>
@@ -169,7 +172,10 @@ export default function App() {
                 {links.map((l) => (
                   <a key={l} href="#" onClick={() => setMenuOpen(false)} className="rounded-2xl px-3 py-2 transition-colors hover:bg-white/10">{l}</a>
                 ))}
-                <button className="relative mt-2 overflow-hidden rounded-full bg-honey px-6 py-2.5 font-display text-lg font-bold text-ink">
+                <button
+                  onClick={() => { setMenuOpen(false); onJoinHive() }}
+                  className="relative mt-2 overflow-hidden rounded-full bg-honey px-6 py-2.5 font-display text-lg font-bold text-ink"
+                >
                   <Shine />
                   Start free
                 </button>
@@ -180,7 +186,6 @@ export default function App() {
 
         <HoneyMelt from="#1c1a17" to="#ffc32b" />
       </header>
-
 
       <section className="relative mx-auto grid max-w-6xl items-center gap-8 px-5 pb-6 pt-10 sm:px-10 lg:grid-cols-[1.1fr_0.9fr] lg:pt-16">
         <div className="text-center lg:text-left">
@@ -195,7 +200,10 @@ export default function App() {
             Bite-sized kana lessons. Ten minutes a day is plenty.
           </p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row lg:justify-start">
-            <button className="animate-wobble relative w-full overflow-hidden rounded-full border-[4px] border-ink bg-white px-8 py-3.5 font-display text-lg font-bold text-ink shadow-[6px_6px_0_0_#1c1a17] transition-all hover:-translate-y-1 hover:shadow-[8px_10px_0_0_#1c1a17] active:translate-y-0.5 sm:w-auto sm:text-xl">
+            <button
+              onClick={onJoinHive}
+              className="animate-wobble relative w-full overflow-hidden rounded-full border-[4px] border-ink bg-white px-8 py-3.5 font-display text-lg font-bold text-ink shadow-[6px_6px_0_0_#1c1a17] transition-all hover:-translate-y-1 hover:shadow-[8px_10px_0_0_#1c1a17] active:translate-y-0.5 sm:w-auto sm:text-xl"
+            >
               <Shine />
               Join the hive for free
             </button>
@@ -227,9 +235,7 @@ export default function App() {
         </div>
       </section>
 
-
       <HoneyMelt from="#ffc32b" to="#1c1a17" />
-
 
       <section className="bg-ink px-5 pb-20 pt-8 text-cream sm:px-10">
         <div className="mx-auto max-w-6xl">
@@ -253,9 +259,7 @@ export default function App() {
         </div>
       </section>
 
-
       <HoneyMelt from="#1c1a17" to="#fff8e6" />
-
 
       <section className="bg-cream px-5 py-16 sm:px-10 sm:py-20">
         <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
@@ -275,13 +279,11 @@ export default function App() {
               ))}
             </ul>
           </div>
-          <Flashcard />
+          <DemoFlashcard />
         </div>
       </section>
 
-
       <HoneyMelt from="#fff8e6" to="#ffc32b" />
-
 
       <section className="bg-honey px-5 py-16 sm:px-10 sm:py-20">
         <div className="mx-auto max-w-6xl">
@@ -308,14 +310,16 @@ export default function App() {
             <p className="max-w-md font-body text-lg text-cream/70">
               No credit card, no pressure. Just you, a friendly bee, and your first five characters.
             </p>
-            <button className="animate-wobble relative overflow-hidden rounded-full bg-honey px-9 py-4 font-display text-xl font-bold text-ink shadow-[6px_6px_0_0_#ffffff] transition-all hover:-translate-y-1 active:translate-y-0.5">
+            <button
+              onClick={onJoinHive}
+              className="animate-wobble relative overflow-hidden rounded-full bg-honey px-9 py-4 font-display text-xl font-bold text-ink shadow-[6px_6px_0_0_#ffffff] transition-all hover:-translate-y-1 active:translate-y-0.5"
+            >
               <Shine />
               Join the hive — free
             </button>
           </div>
         </div>
       </section>
-
 
       <footer className="bg-ink px-5 py-10 text-cream sm:px-10">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
@@ -330,4 +334,60 @@ export default function App() {
       </footer>
     </div>
   )
+}
+
+export default function App() {
+  const [page, setPage] = useState<Page>("landing")
+  const [selectedBook, setSelectedBook] = useState<VocabBook | null>(null)
+
+  const goToJars = () => {
+    setPage("jars")
+    window.scrollTo(0, 0)
+  }
+
+  const goHome = () => {
+    setPage("landing")
+    window.scrollTo(0, 0)
+  }
+
+  if (page === "jars") {
+    return (
+      <JarSelection
+        onSelect={(id) => {
+          if (id === "vocabulary") {
+            setPage("vocab")
+            window.scrollTo(0, 0)
+          }
+        }}
+        onBack={goHome}
+      />
+    )
+  }
+
+  if (page === "vocab") {
+    return (
+      <VocabularyPage
+        onSelectBook={(book) => {
+          setSelectedBook(book)
+          setPage("vocab-study")
+          window.scrollTo(0, 0)
+        }}
+        onBack={goToJars}
+      />
+    )
+  }
+
+  if (page === "vocab-study" && selectedBook) {
+    return (
+      <VocabFlashcard
+        book={selectedBook}
+        onBack={() => {
+          setPage("vocab")
+          window.scrollTo(0, 0)
+        }}
+      />
+    )
+  }
+
+  return <LandingPage onJoinHive={goToJars} />
 }
