@@ -86,11 +86,16 @@ export async function fetchUnitWords(sachId: string, unitNum: number): Promise<V
     const t = link.tuvung
     const kanjiList = (t.tuvung_hantu_link || []).map((th: any) => {
       const h = th.hantu
-      const b = h.hantu_bothu_link?.[0]?.bothu // Lấy bộ thủ đầu tiên (nếu có)
+      const radicals = (h.hantu_bothu_link || [])
+        .map((link: any) => link.bothu)
+        .filter(Boolean)
+        .map((b: any) => `${b.bo} (${b.nghia})`)
+        .join(', ')
+
       return {
         character: h.chukanji,
         hanViet: h.amhanviet,
-        radical: b ? `${b.bo} (${b.nghia})` : '',
+        radical: radicals,
         story: h.note
       } as KanjiInfo
     })
