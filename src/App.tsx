@@ -3,7 +3,7 @@ import beeImg from "./imports/bee.png"
 import JarSelection from "./pages/JarSelection"
 import VocabularyPage from "./pages/VocabularyPage"
 import VocabFlashcard from "./pages/VocabFlashcard"
-import type { VocabBook } from "./data/vocabData"
+import type { VocabBook, VocabUnit } from "./data/vocabData"
 
 type Page = "landing" | "jars" | "vocab" | "vocab-study"
 
@@ -116,9 +116,9 @@ function DemoFlashcard() {
 }
 
 const paths = [
-  { jp: "ひらがな", title: "Hiragana", desc: "The soft, round syllabary. Start here to sound out any word.", count: "46 signs", bg: "bg-cream" },
-  { jp: "カタカナ", title: "Katakana", desc: "Angular kana for loanwords, names, and a little emphasis.", count: "46 signs", bg: "bg-honey-light" },
-  { jp: "かんじ", title: "First Kanji", desc: "100 friendly characters, each with a bee-sized backstory.", count: "100 kanji", bg: "bg-cream" },
+  { jp: "ひらがな", title: "Hiragana", desc: "Bảng chữ mềm mại. Bắt đầu từ đây để đọc được mọi từ.", count: "46 chữ", bg: "bg-cream" },
+  { jp: "カタカナ", title: "Katakana", desc: "Bảng chữ góc cạnh cho từ mượn, tên riêng và nhấn mạnh.", count: "46 chữ", bg: "bg-honey-light" },
+  { jp: "かんじ", title: "Kanji đầu tiên", desc: "100 chữ Hán thân thiện, mỗi chữ kèm câu chuyện dễ nhớ.", count: "100 chữ", bg: "bg-cream" },
 ]
 
 function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
@@ -197,7 +197,7 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
             <span className="mt-2 block text-white [-webkit-text-stroke:3px_#1c1a17]">sweet &amp; simple.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-md font-body text-lg font-medium text-ink-soft sm:text-xl lg:mx-0">
-            Bite-sized kana lessons. Ten minutes a day is plenty.
+            Bài học kana nhỏ gọn. Mỗi ngày 10 phút là đủ.
           </p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row lg:justify-start">
             <button
@@ -239,9 +239,9 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
 
       <section className="bg-ink px-5 pb-20 pt-8 text-cream sm:px-10">
         <div className="mx-auto max-w-6xl">
-          <h2 className="font-display text-4xl font-extrabold text-honey sm:text-5xl">Three sweet paths</h2>
+          <h2 className="font-display text-4xl font-extrabold text-honey sm:text-5xl">Ba con đường ngọt ngào</h2>
           <p className="mt-2 max-w-lg font-body text-lg text-cream/70">
-            Follow the trail of honey from your very first sound to reading real words.
+            Đi theo vệt mật ong từ âm thanh đầu tiên đến khi đọc được từ thật.
           </p>
           <div className="mt-10 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
             {paths.map((p) => (
@@ -264,14 +264,14 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
       <section className="bg-cream px-5 py-16 sm:px-10 sm:py-20">
         <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
           <div className="text-center lg:text-left">
-            <span className="font-display text-lg font-bold uppercase tracking-[0.3em] text-honey-deep">Practice</span>
-            <h2 className="mt-3 font-display text-4xl font-extrabold sm:text-5xl">Flip a card, catch a sound</h2>
+            <span className="font-display text-lg font-bold uppercase tracking-[0.3em] text-honey-deep">Luyện tập</span>
+            <h2 className="mt-3 font-display text-4xl font-extrabold sm:text-5xl">Lật thẻ, bắt âm thanh</h2>
             <p className="mx-auto mt-4 max-w-md font-body text-lg font-medium text-ink-soft lg:mx-0">
-              Every review is a tiny game. Tap the jelly card to reveal the reading,
-              a real word, and its meaning — then buzz to the next one.
+              Mỗi lần ôn tập là một trò chơi nhỏ. Chạm thẻ để lật ra cách đọc,
+              từ thật và nghĩa — rồi bay sang thẻ tiếp theo.
             </p>
             <ul className="mt-6 space-y-3 text-left font-display text-lg font-semibold">
-              {["Spaced repetition, quietly in the background", "Native audio on every card", "Streaks that actually feel good"].map((t) => (
+              {["Lặp lại ngắt quãng, âm thầm ghi nhớ", "Âm thanh bản ngữ mỗi thẻ", "Chuỗi streak khiến bạn muốn học tiếp"].map((t) => (
                 <li key={t} className="flex items-start gap-3">
                   <span className="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full border-[3px] border-ink bg-honey text-xs font-black">✓</span>
                   {t}
@@ -289,9 +289,9 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-5 sm:grid-cols-3">
             {[
-              { n: "10 min", l: "a day is all it takes" },
-              { n: "1,200+", l: "kana & kanji cards" },
-              { n: "28,431", l: "learners in the hive" },
+              { n: "10 phút", l: "mỗi ngày là đủ" },
+              { n: "1,200+", l: "thẻ kana & kanji" },
+              { n: "28,431", l: "người học trong tổ" },
             ].map((s) => (
               <div key={s.l} className="rounded-[2rem] border-[4px] border-ink bg-white p-8 text-center shadow-[6px_6px_0_0_#1c1a17]">
                 <div className="font-display text-5xl font-extrabold sm:text-6xl">{s.n}</div>
@@ -305,10 +305,10 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
               <JellyBee className="h-full w-full" />
             </div>
             <h2 className="max-w-xl font-display text-3xl font-extrabold leading-tight text-honey sm:text-5xl">
-              Ready to make Japanese stick like honey?
+              Sẵn sàng để tiếng Nhật dính như mật ong chưa?
             </h2>
             <p className="max-w-md font-body text-lg text-cream/70">
-              No credit card, no pressure. Just you, a friendly bee, and your first five characters.
+              Không thẻ tín dụng, không áp lực. Chỉ có bạn, chú ong thân thiện và 5 chữ đầu tiên.
             </p>
             <button
               onClick={onJoinHive}
@@ -329,7 +329,7 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
             </div>
             Ja<span className="text-honey">bee</span>nese
           </div>
-          <p className="font-body text-sm font-semibold text-cream/60">Made with honey · がんばって! · © 2026</p>
+          <p className="font-body text-sm font-semibold text-cream/60">Làm bằng mật ong · がんばって! · © 2026</p>
         </div>
       </footer>
     </div>
@@ -339,6 +339,7 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
 export default function App() {
   const [page, setPage] = useState<Page>("landing")
   const [selectedBook, setSelectedBook] = useState<VocabBook | null>(null)
+  const [selectedUnit, setSelectedUnit] = useState<VocabUnit | null>(null)
 
   const goToJars = () => {
     setPage("jars")
@@ -367,8 +368,9 @@ export default function App() {
   if (page === "vocab") {
     return (
       <VocabularyPage
-        onSelectBook={(book) => {
+        onSelectUnit={(book, unit) => {
           setSelectedBook(book)
+          setSelectedUnit(unit)
           setPage("vocab-study")
           window.scrollTo(0, 0)
         }}
@@ -377,10 +379,13 @@ export default function App() {
     )
   }
 
-  if (page === "vocab-study" && selectedBook) {
+  if (page === "vocab-study" && selectedBook && selectedUnit) {
     return (
       <VocabFlashcard
-        book={selectedBook}
+        unit={selectedUnit}
+        bookColor={selectedBook.color}
+        bookShadow={selectedBook.shadow}
+        bookTitle={selectedBook.title}
         onBack={() => {
           setPage("vocab")
           window.scrollTo(0, 0)

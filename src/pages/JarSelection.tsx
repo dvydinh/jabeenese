@@ -31,7 +31,7 @@ export default function JarSelection({
             onClick={onBack}
             className="flex items-center gap-2 font-display text-lg font-bold text-cream/70 transition-colors hover:text-honey"
           >
-            ← Home
+            ← Trang chủ
           </button>
         </div>
       </div>
@@ -58,7 +58,7 @@ export default function JarSelection({
               </span>
             </h1>
             <p className="mt-5 max-w-md font-body text-xl font-semibold text-ink-soft">
-              Pick a honey jar to begin your sweet journey 🐝
+              Chọn một hũ mật ong để bắt đầu hành trình ngọt ngào 🐝
             </p>
           </div>
 
@@ -91,12 +91,12 @@ export default function JarSelection({
                   </span>
                   {!jar.available && (
                     <span className="rounded-full border-[3px] border-ink/20 bg-cream px-4 py-1.5 font-display text-sm font-bold text-ink-soft">
-                      Coming soon
+                      Sắp có
                     </span>
                   )}
                   {jar.available && (
                     <span className="rounded-full border-[3px] border-ink bg-honey px-5 py-2 font-display text-base font-bold shadow-[3px_3px_0_0_#1c1a17] transition-all duration-300 group-hover:bg-honey-deep group-hover:shadow-[4px_5px_0_0_#1c1a17]">
-                      Start →
+                      Bắt đầu →
                     </span>
                   )}
                 </button>
@@ -106,7 +106,7 @@ export default function JarSelection({
 
           <div className="mt-14 flex items-center justify-center gap-2 font-display text-lg font-bold text-ink-soft">
             <span className="inline-block animate-pulse">✨</span>
-            More flavors coming soon
+            Nhiều hương vị sắp ra mắt
             <span className="inline-block animate-pulse">✨</span>
           </div>
         </div>

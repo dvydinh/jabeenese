@@ -1,137 +1,356 @@
 import { useState } from "react"
-import type { VocabBook } from "../data/vocabData"
+import type { VocabUnit, VocabWord, KanjiInfo } from "../data/vocabData"
 
-function Shine() {
+type StudyMode = "meaning" | "reading" | "word"
+
+const STUDY_MODES: { id: StudyMode; label: string; desc: string; icon: string }[] = [
+  { id: "meaning", label: "Học nghĩa", desc: "Mặt trước: từ gốc + cách đọc → Lật: nghĩa", icon: "🇻🇳" },
+  { id: "reading", label: "Học cách đọc", desc: "Mặt trước: từ gốc + nghĩa → Lật: cách đọc", icon: "🔤" },
+  { id: "word", label: "Học từ gốc", desc: "Mặt trước: cách đọc + nghĩa → Lật: từ gốc", icon: "🈶" },
+]
+
+function getFrontBack(word: VocabWord, mode: StudyMode) {
+  switch (mode) {
+    case "meaning":
+      return {
+        frontMain: word.japanese,
+        frontSub: word.reading,
+        backMain: word.meaning,
+        backSub: null,
+      }
+    case "reading":
+      return {
+        frontMain: word.japanese,
+        frontSub: word.meaning,
+        backMain: word.reading,
+        backSub: null,
+      }
+    case "word":
+      return {
+        frontMain: word.reading,
+        frontSub: word.meaning,
+        backMain: word.japanese,
+        backSub: null,
+      }
+  }
+}
+
+function KanjiPopup({
+  info,
+  onClose,
+}: {
+  info: KanjiInfo
+  onClose: () => void
+}) {
   return (
-    <span className="pointer-events-none absolute left-4 top-1 h-2.5 w-9 -rotate-6 rounded-full bg-white/70 blur-[1.5px]" />
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="kanji-popup w-full max-w-md rounded-[2.5rem] border-[5px] border-ink bg-white p-8 shadow-[10px_12px_0_0_#f5a623] sm:p-10"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between">
+          <span className="font-kana text-8xl font-black text-ink sm:text-9xl">
+            {info.character}
+          </span>
+          <button
+            onClick={onClose}
+            className="grid h-10 w-10 place-items-center rounded-full border-[3px] border-ink bg-cream font-display text-lg font-bold transition-all hover:bg-honey"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div className="mt-6 space-y-5">
+          <div className="rounded-2xl border-[3px] border-ink bg-honey-light p-5">
+            <span className="font-display text-sm font-bold uppercase tracking-widest text-ink-soft">
+              Hán Việt
+            </span>
+            <p className="mt-1 font-display text-3xl font-extrabold text-ink">
+              {info.hanViet}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border-[3px] border-ink bg-cream p-5">
+            <span className="font-display text-sm font-bold uppercase tracking-widest text-ink-soft">
+              Bộ thủ
+            </span>
+            <p className="mt-1 font-display text-xl font-bold text-ink">
+              {info.radical}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border-[3px] border-ink bg-white p-5">
+            <span className="font-display text-sm font-bold uppercase tracking-widest text-ink-soft">
+              Câu chuyện ghi nhớ
+            </span>
+            <p className="mt-2 font-body text-lg font-medium leading-relaxed text-ink">
+              {info.story}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ClickableKanji({
+  text,
+  kanjiList,
+  className = "",
+}: {
+  text: string
+  kanjiList?: KanjiInfo[]
+  className?: string
+}) {
+  const [popup, setPopup] = useState<KanjiInfo | null>(null)
+
+  if (!kanjiList || kanjiList.length === 0) {
+    return <span className={className}>{text}</span>
+  }
+
+  const kanjiMap = new Map(kanjiList.map((k) => [k.character, k]))
+
+  return (
+    <>
+      <span className={className}>
+        {Array.from(text).map((char, idx) => {
+          const info = kanjiMap.get(char)
+          if (info) {
+            return (
+              <span
+                key={idx}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setPopup(info)
+                }}
+                className="cursor-pointer rounded-lg transition-all duration-200 hover:bg-honey/40 hover:px-1"
+                title={`${info.hanViet} — bấm để xem chi tiết`}
+              >
+                {char}
+              </span>
+            )
+          }
+          return <span key={idx}>{char}</span>
+        })}
+      </span>
+      {popup && <KanjiPopup info={popup} onClose={() => setPopup(null)} />}
+    </>
   )
 }
 
 export default function VocabFlashcard({
-  book,
+  unit,
+  bookColor,
+  bookShadow,
+  bookTitle,
   onBack,
 }: {
-  book: VocabBook
+  unit: VocabUnit
+  bookColor: string
+  bookShadow: string
+  bookTitle: string
   onBack: () => void
 }) {
   const [i, setI] = useState(0)
   const [flipped, setFlipped] = useState(false)
-  const word = book.words[i]
+  const [mode, setMode] = useState<StudyMode>("meaning")
+  const [showModeSelect, setShowModeSelect] = useState(false)
+  const word = unit.words[i]
+  const { frontMain, frontSub, backMain } = getFrontBack(word, mode)
 
   const goTo = (next: number) => {
     setFlipped(false)
-    setTimeout(() => setI(next), 120)
+    setTimeout(() => setI(next), 150)
   }
 
-  const next = () => goTo((i + 1) % book.words.length)
-  const prev = () => goTo((i - 1 + book.words.length) % book.words.length)
+  const next = () => goTo((i + 1) % unit.words.length)
+  const prev = () => goTo((i - 1 + unit.words.length) % unit.words.length)
+
+  const isFrontKanji = mode === "meaning" || mode === "reading"
+  const isBackKanji = mode === "word"
 
   return (
-    <div className="min-h-screen bg-cream font-body text-ink">
-      <div className="bg-ink">
-        <div className="mx-auto flex max-w-5xl items-center gap-4 px-5 py-5 sm:px-10">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 font-display text-lg font-bold text-cream/70 transition-colors hover:text-honey"
+    <div className="fixed inset-0 z-40 flex flex-col bg-ink font-body text-cream">
+      <div className="flex items-center justify-between gap-3 px-4 py-3 sm:px-8 sm:py-4">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 font-display text-base font-bold text-cream/60 transition-colors hover:text-honey sm:text-lg"
+        >
+          ← Quay lại
+        </button>
+
+        <div className="flex items-center gap-2 text-center">
+          <span
+            className="hidden h-8 w-8 place-items-center rounded-lg border-[2px] border-white/20 font-kana text-xs font-bold text-white sm:grid"
+            style={{ background: bookColor }}
           >
-            ← Back
+            本
+          </span>
+          <span className="font-display text-sm font-bold text-cream/70 sm:text-base">
+            {bookTitle} · {unit.name}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowModeSelect((s) => !s)}
+            className="rounded-full border-[2px] border-cream/20 bg-white/10 px-3 py-1.5 font-display text-sm font-bold text-cream transition-all hover:border-honey hover:bg-honey/20 sm:px-4"
+          >
+            {STUDY_MODES.find((m) => m.id === mode)?.icon}{" "}
+            <span className="hidden sm:inline">
+              {STUDY_MODES.find((m) => m.id === mode)?.label}
+            </span>
           </button>
-          <div className="flex items-center gap-2">
-            <span
-              className="grid h-8 w-8 place-items-center rounded-lg border-[2px] border-ink font-kana text-sm font-bold text-white"
-              style={{ background: book.color }}
-            >
-              本
-            </span>
-            <span className="font-display text-xl font-extrabold text-cream">
-              {book.title}
-            </span>
-          </div>
-          <span className="ml-auto font-display text-sm font-bold text-cream/50">
-            {i + 1} / {book.words.length}
+          <span className="font-display text-sm font-bold text-cream/40">
+            {i + 1}/{unit.words.length}
           </span>
         </div>
       </div>
 
-      <div className="mx-auto flex max-w-2xl flex-col items-center px-5 py-12 sm:px-10 sm:py-16">
+      {showModeSelect && (
+        <div className="absolute left-0 right-0 top-14 z-50 mx-auto w-full max-w-md px-4 sm:top-16">
+          <div className="rounded-[2rem] border-[4px] border-ink bg-white p-4 text-ink shadow-[8px_8px_0_0_#f5a623]">
+            <p className="mb-3 text-center font-display text-lg font-extrabold">
+              Chọn chế độ học
+            </p>
+            {STUDY_MODES.map((m) => (
+              <button
+                key={m.id}
+                onClick={() => {
+                  setMode(m.id)
+                  setFlipped(false)
+                  setShowModeSelect(false)
+                }}
+                className={`mb-2 flex w-full items-center gap-3 rounded-2xl border-[3px] p-4 text-left transition-all ${
+                  mode === m.id
+                    ? "border-ink bg-honey shadow-[3px_3px_0_0_#1c1a17]"
+                    : "border-ink/20 bg-cream hover:border-ink hover:bg-honey-light"
+                }`}
+              >
+                <span className="text-2xl">{m.icon}</span>
+                <div>
+                  <span className="font-display text-base font-extrabold">{m.label}</span>
+                  <p className="font-body text-xs font-medium text-ink-soft">{m.desc}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="flex flex-1 flex-col items-center justify-center px-4 pb-4 sm:px-8">
         <div
-          className="relative h-72 w-full max-w-md cursor-pointer [perspective:1200px] sm:h-80"
+          className="relative w-full max-w-lg cursor-pointer [perspective:1400px]"
+          style={{ height: "min(65vh, 500px)" }}
           onClick={() => setFlipped((f) => !f)}
         >
           <div
             className="relative h-full w-full transition-transform duration-500 [transform-style:preserve-3d]"
             style={{
               transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
+              transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)",
             }}
           >
-            <div className="absolute inset-0 flex flex-col items-center justify-center rounded-[2.5rem] border-[5px] border-ink bg-white [backface-visibility:hidden] shadow-[10px_12px_0_0_#1c1a17]">
-              <span className="font-kana text-7xl font-black text-ink sm:text-8xl">
-                {word.japanese}
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-[3rem] border-[5px] border-white/20 bg-gradient-to-br from-white/15 to-white/5 p-8 [backface-visibility:hidden] shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
+              {isFrontKanji ? (
+                <ClickableKanji
+                  text={frontMain}
+                  kanjiList={word.kanji}
+                  className="font-kana text-7xl font-black text-cream sm:text-8xl lg:text-9xl"
+                />
+              ) : (
+                <span className="font-kana text-6xl font-black text-cream sm:text-7xl lg:text-8xl">
+                  {frontMain}
+                </span>
+              )}
+              <div className="h-[3px] w-20 rounded-full bg-cream/20" />
+              <span className="font-body text-xl font-semibold text-cream/60 sm:text-2xl">
+                {frontSub}
               </span>
-              <span className="mt-4 font-body text-sm font-bold uppercase tracking-[0.3em] text-ink-soft">
-                tap to reveal
+              <span className="mt-2 rounded-full border-[2px] border-cream/20 px-4 py-1.5 font-display text-xs font-bold uppercase tracking-widest text-cream/30">
+                chạm để lật
               </span>
             </div>
 
             <div
-              className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-[2.5rem] border-[5px] border-ink text-white [backface-visibility:hidden]"
+              className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-[3rem] border-[5px] p-8 [backface-visibility:hidden]"
               style={{
-                background: book.color,
                 transform: "rotateY(180deg)",
-                boxShadow: `10px 12px 0 0 ${book.shadow}`,
+                background: `linear-gradient(135deg, ${bookColor}, ${bookShadow})`,
+                borderColor: bookShadow,
+                boxShadow: `0 20px 60px rgba(0,0,0,0.3)`,
               }}
             >
-              <span className="font-kana text-4xl font-black sm:text-5xl">
-                {word.reading}
-              </span>
-              <div className="h-[3px] w-16 rounded-full bg-white/40" />
-              <span className="font-display text-2xl font-extrabold text-ink sm:text-3xl">
-                {word.meaning}
+              {isBackKanji ? (
+                <ClickableKanji
+                  text={backMain}
+                  kanjiList={word.kanji}
+                  className="font-kana text-7xl font-black text-white sm:text-8xl lg:text-9xl"
+                />
+              ) : mode === "reading" ? (
+                <span className="font-kana text-6xl font-black text-white sm:text-7xl lg:text-8xl">
+                  {backMain}
+                </span>
+              ) : (
+                <span className="text-center font-display text-4xl font-extrabold text-white sm:text-5xl lg:text-6xl">
+                  {backMain}
+                </span>
+              )}
+              <span className="mt-2 rounded-full bg-white/20 px-4 py-1.5 font-display text-xs font-bold uppercase tracking-widest text-white/60">
+                đã lật ✓
               </span>
             </div>
           </div>
         </div>
 
-        <div className="mt-10 flex items-center gap-4">
+        <div className="mt-6 flex items-center gap-4 sm:mt-8">
           <button
-            onClick={prev}
-            className="relative overflow-hidden rounded-full border-[3px] border-ink bg-white px-6 py-2.5 font-display text-lg font-bold text-ink shadow-[4px_4px_0_0_#1c1a17] transition-all hover:-translate-y-0.5 hover:shadow-[6px_7px_0_0_#1c1a17] active:translate-y-0.5 active:shadow-[2px_2px_0_0_#1c1a17]"
+            onClick={(e) => { e.stopPropagation(); prev() }}
+            className="grid h-12 w-12 place-items-center rounded-full border-[3px] border-cream/20 bg-white/10 font-display text-xl font-bold text-cream transition-all hover:border-honey hover:bg-honey/20 active:scale-90 sm:h-14 sm:w-14"
           >
-            ← Prev
+            ←
           </button>
 
-          <div className="flex gap-1.5">
-            {book.words.map((_, idx) => (
-              <span
+          <div className="flex gap-1">
+            {unit.words.map((_, idx) => (
+              <button
                 key={idx}
-                className={`h-2.5 rounded-full transition-all duration-300 ${
-                  idx === i ? "w-7 bg-ink" : "w-2.5 bg-ink/20"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setFlipped(false)
+                  setI(idx)
+                }}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  idx === i ? "w-6 bg-honey" : "w-2 bg-cream/20 hover:bg-cream/40"
                 }`}
               />
             ))}
           </div>
 
           <button
-            onClick={next}
-            className="animate-wobble relative overflow-hidden rounded-full border-[3px] border-ink bg-honey px-6 py-2.5 font-display text-lg font-bold text-ink shadow-[4px_4px_0_0_#1c1a17] transition-all hover:-translate-y-0.5 hover:shadow-[6px_7px_0_0_#1c1a17] active:translate-y-0.5 active:shadow-[2px_2px_0_0_#1c1a17]"
+            onClick={(e) => { e.stopPropagation(); next() }}
+            className="grid h-12 w-12 place-items-center rounded-full border-[3px] border-honey bg-honey font-display text-xl font-bold text-ink shadow-[0_4px_15px_rgba(255,195,43,0.3)] transition-all hover:scale-105 hover:shadow-[0_6px_20px_rgba(255,195,43,0.4)] active:scale-90 sm:h-14 sm:w-14"
           >
-            <Shine />
-            Next →
+            →
           </button>
         </div>
 
-        <div className="mt-8 flex flex-wrap justify-center gap-2">
-          {book.words.map((w, idx) => (
+        <div className="mt-4 flex flex-wrap justify-center gap-1.5 sm:mt-6">
+          {unit.words.map((w, idx) => (
             <button
               key={idx}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation()
                 setFlipped(false)
                 setI(idx)
               }}
-              className={`rounded-xl border-[2px] border-ink px-3 py-1.5 font-kana text-sm font-bold transition-all ${
+              className={`rounded-xl border-[2px] px-3 py-1.5 font-kana text-sm font-bold transition-all ${
                 idx === i
-                  ? "bg-ink text-cream shadow-[2px_2px_0_0_#f5a623]"
-                  : "bg-white text-ink hover:bg-honey-light"
+                  ? "border-honey bg-honey text-ink"
+                  : "border-cream/15 bg-white/5 text-cream/50 hover:border-cream/30 hover:bg-white/10 hover:text-cream"
               }`}
             >
               {w.japanese}
