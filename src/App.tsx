@@ -140,20 +140,18 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
                 Ja<span className="text-honey">bee</span>nese
               </span>
             </div>
-            <nav className="hidden items-center gap-7 font-display text-lg font-semibold md:flex">
+            <nav className="hidden items-center gap-2 font-display text-base font-bold md:flex">
               {links.map((l) => (
-                <a key={l} href="#" className="text-cream/85 transition-colors hover:text-honey">{l}</a>
+                <a
+                  key={l}
+                  href="#"
+                  className="rounded-full px-5 py-2 text-cream/85 transition-all hover:bg-white/10 hover:text-honey"
+                >
+                  {l}
+                </a>
               ))}
             </nav>
             <div className="flex items-center gap-2">
-              <button
-                onClick={onJoinHive}
-                className="relative hidden overflow-hidden rounded-full bg-honey px-6 py-2 font-display text-base font-bold text-ink shadow-[3px_3px_0_0_rgba(0,0,0,0.35)] transition-all hover:-translate-y-0.5 sm:block"
-              >
-                <Shine />
-                Bắt đầu
-              </button>
-
               <button
                 aria-label="Menu"
                 onClick={() => setMenuOpen((o) => !o)}
@@ -270,7 +268,7 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
             <h2 className="mt-3 font-display text-4xl font-extrabold sm:text-5xl">Lật thẻ, bắt âm thanh</h2>
             <p className="mx-auto mt-4 max-w-md font-body text-lg font-medium text-ink-soft lg:mx-0">
               Mỗi lần ôn tập là một trò chơi nhỏ. Chạm thẻ để lật ra cách đọc,
-              từ thật và nghĩa — rồi bay sang thẻ tiếp theo.
+              từ thật và nghĩa rồi bay sang thẻ tiếp theo.
             </p>
             <ul className="mt-6 space-y-3 text-left font-display text-lg font-semibold">
               {["Lặp lại ngắt quãng, âm thầm ghi nhớ", "Âm thanh bản ngữ mỗi thẻ", "Chuỗi streak khiến bạn muốn học tiếp"].map((t) => (
@@ -317,7 +315,7 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
               className="animate-wobble relative overflow-hidden rounded-full bg-honey px-9 py-4 font-display text-xl font-bold text-ink shadow-[6px_6px_0_0_#ffffff] transition-all hover:-translate-y-1 active:translate-y-0.5"
             >
               <Shine />
-              Tham gia tổ ong — miễn phí
+              Tham gia tổ ong miễn phí
             </button>
           </div>
         </div>
