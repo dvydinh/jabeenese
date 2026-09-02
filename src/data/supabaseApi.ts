@@ -67,7 +67,7 @@ export async function fetchUnitWords(sachId: string, unitNum: number): Promise<V
             id, chukanji, amhanviet, note,
             hantu_bothu_link (
               bothu (
-                ten, nghia
+                bo, nghia
               )
             )
           )
@@ -90,7 +90,7 @@ export async function fetchUnitWords(sachId: string, unitNum: number): Promise<V
       return {
         character: h.chukanji,
         hanViet: h.amhanviet,
-        radical: b ? `${b.ten} (${b.nghia})` : '',
+        radical: b ? `${b.bo} (${b.nghia})` : '',
         story: h.note
       } as KanjiInfo
     })
