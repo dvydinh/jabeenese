@@ -287,7 +287,12 @@ export default function App() {
   }
 
   const isStudy = page === "vocab-study" || page === "radicals-study"
-  const meltToColor = page === "landing" ? "#ffc32b" : page === "katakana" ? "#ffe08a" : "#fff8e6"
+  const meltToColor =
+    page === "landing" || page === "jars"
+      ? "#ffc32b"
+      : page === "katakana"
+      ? "#ffe08a"
+      : "#fff8e6"
 
   return (
     <>
