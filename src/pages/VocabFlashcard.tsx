@@ -166,6 +166,34 @@ export default function VocabFlashcard({
     })
   }, [bookId, unit])
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (words.length === 0) return
+      if (e.key === "ArrowLeft") {
+        setFlipped(false)
+        setI(curr => (curr - 1 + words.length) % words.length)
+      }
+      if (e.key === "ArrowRight") {
+        setFlipped(false)
+        setI(curr => (curr + 1) % words.length)
+      }
+      if (e.key === " " || e.key === "Enter") {
+        e.preventDefault()
+        setFlipped(f => !f)
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [words.length])
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => console.error(err))
+    } else {
+      document.exitFullscreen().catch(err => console.error(err))
+    }
+  }
+
   if (loading) {
     return (
       <div className="fixed inset-0 z-40 flex items-center justify-center bg-ink font-body text-cream">
@@ -221,6 +249,13 @@ export default function VocabFlashcard({
         </div>
 
         <div className="flex items-center gap-3">
+          <button
+            onClick={toggleFullscreen}
+            className="grid h-8 w-8 place-items-center rounded-full border-[2px] border-cream/20 bg-white/10 text-cream transition-all hover:border-honey hover:bg-honey/20 sm:h-9 sm:w-9"
+            title="Toàn màn hình"
+          >
+            ⛶
+          </button>
           <button
             onClick={() => setShowModeSelect((s) => !s)}
             className="rounded-full border-[2px] border-cream/20 bg-white/10 px-3 py-1.5 font-display text-sm font-bold text-cream transition-all hover:border-honey hover:bg-honey/20 sm:px-4"
@@ -370,9 +405,8 @@ export default function VocabFlashcard({
           </button>
         </div>
 
-        <div className="hidden flex-1 sm:block"></div>
-        <div className="flex w-full flex-1 justify-center pb-20 sm:pb-0 lg:hidden">
-          <div className="flex flex-wrap justify-center gap-1.5">
+        <div className="absolute inset-x-0 bottom-4 flex w-full justify-center pb-2 sm:pb-4 lg:hidden pointer-events-none">
+          <div className="flex flex-wrap justify-center gap-1.5 pointer-events-auto px-4">
             {words.map((w, idx) => (
               <button
                 key={idx}
