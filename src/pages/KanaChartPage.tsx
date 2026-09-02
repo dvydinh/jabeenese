@@ -51,19 +51,20 @@ export default function KanaChartPage({ type }: { type: "hiragana" | "katakana" 
                   {/* Kana cells */}
                   {row.map((char, cIdx) => (
                     char.empty ? (
-                      <div key={cIdx} className="rounded-3xl border-[3px] border-dashed border-ink/10" />
+                      <div key={cIdx} className="rounded-[2rem] border-[4px] border-dashed border-ink/15" />
                     ) : (
-                      <div
+                      <button
                         key={cIdx}
-                        className="group relative flex aspect-square flex-col items-center justify-center rounded-3xl border-[4px] border-ink bg-white shadow-[4px_4px_0_0_#1c1a17] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#f5a623]"
+                        className="group relative flex aspect-square flex-col items-center justify-center overflow-hidden rounded-[2rem] border-[5px] border-ink bg-white shadow-[6px_6px_0_0_#1c1a17] transition-all duration-300 hover:-translate-y-2 hover:-rotate-3 hover:bg-honey hover:shadow-[10px_12px_0_0_#1c1a17] active:translate-y-0 active:rotate-0 active:shadow-[2px_2px_0_0_#1c1a17]"
                       >
-                        <span className="font-kana text-3xl font-black text-ink transition-transform group-hover:scale-110 sm:text-4xl lg:text-5xl">
+                        <div className="absolute -left-10 -top-10 h-24 w-24 rounded-full bg-white/40 opacity-0 blur-md transition-opacity group-hover:opacity-100" />
+                        <span className="font-kana text-4xl font-black text-ink transition-transform duration-300 group-hover:scale-110 sm:text-5xl lg:text-6xl">
                           {char.kana}
                         </span>
-                        <span className="absolute bottom-2 font-display text-xs font-bold text-ink-soft sm:bottom-3 sm:text-sm">
+                        <span className="absolute bottom-2 font-display text-sm font-extrabold text-ink-soft transition-colors group-hover:text-ink sm:bottom-3 sm:text-base">
                           {char.romaji}
                         </span>
-                      </div>
+                      </button>
                     )
                   ))}
                 </div>
