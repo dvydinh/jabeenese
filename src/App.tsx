@@ -187,7 +187,7 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
         <HoneyMelt from="#1c1a17" to="#ffc32b" />
       </header>
 
-      <section className="relative mx-auto grid max-w-7xl items-center gap-8 px-6 pb-6 pt-10 sm:px-12 lg:grid-cols-[1.1fr_0.9fr] lg:px-16 lg:pt-16">
+      <section className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 pb-12 pt-16 sm:px-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 lg:px-16 lg:pb-16 lg:pt-24">
         <div className="text-center lg:text-left">
           <span className="inline-block rounded-full border-[3px] border-ink bg-white px-4 py-1.5 font-display text-xs font-bold uppercase tracking-widest shadow-[3px_3px_0_0_#1c1a17] sm:text-sm">
             日本語 · ngọt ngào &amp; đơn giản
@@ -237,7 +237,7 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
 
       <HoneyMelt from="#ffc32b" to="#1c1a17" />
 
-      <section className="bg-ink px-5 pb-20 pt-8 text-cream sm:px-10">
+      <section className="bg-ink px-5 pb-28 pt-16 text-cream sm:px-10 lg:pb-32 lg:pt-20">
         <div className="mx-auto max-w-6xl">
           <h2 className="font-display text-4xl font-extrabold text-honey sm:text-5xl">Ba con đường ngọt ngào</h2>
           <p className="mt-2 max-w-lg font-body text-lg text-cream/70">
@@ -261,8 +261,8 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
 
       <HoneyMelt from="#1c1a17" to="#fff8e6" />
 
-      <section className="bg-cream px-5 py-16 sm:px-10 sm:py-20">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
+      <section className="bg-cream px-5 py-20 sm:px-10 sm:py-28 lg:py-32">
+        <div className="mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-2 lg:gap-20">
           <div className="text-center lg:text-left">
             <span className="font-display text-lg font-bold uppercase tracking-[0.3em] text-honey-deep">Luyện tập</span>
             <h2 className="mt-3 font-display text-4xl font-extrabold sm:text-5xl">Lật thẻ, bắt âm thanh</h2>
@@ -285,7 +285,7 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
 
       <HoneyMelt from="#fff8e6" to="#ffc32b" />
 
-      <section className="bg-honey px-5 py-16 sm:px-10 sm:py-20">
+      <section className="bg-honey px-5 py-20 sm:px-10 sm:py-28 lg:py-32">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-5 sm:grid-cols-3">
             {[
@@ -321,7 +321,7 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
         </div>
       </section>
 
-      <footer className="bg-ink px-5 py-10 text-cream sm:px-10">
+      <footer className="bg-ink px-5 py-12 text-cream sm:px-10 lg:py-16">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex items-center gap-2 font-display text-xl font-extrabold text-cream">
             <div className="h-9 w-9">

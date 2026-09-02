@@ -205,34 +205,40 @@ export default function VocabFlashcard({
       </div>
 
       {showModeSelect && (
-        <div className="absolute left-0 right-0 top-14 z-50 mx-auto w-full max-w-md px-4 sm:top-16">
-          <div className="rounded-[2rem] border-[4px] border-ink bg-white p-4 text-ink shadow-[8px_8px_0_0_#f5a623]">
-            <p className="mb-3 text-center font-display text-lg font-extrabold">
-              Chọn chế độ học
-            </p>
-            {STUDY_MODES.map((m) => (
-              <button
-                key={m.id}
-                onClick={() => {
-                  setMode(m.id)
-                  setFlipped(false)
-                  setShowModeSelect(false)
-                }}
-                className={`mb-2 flex w-full items-center gap-3 rounded-2xl border-[3px] p-4 text-left transition-all ${
-                  mode === m.id
-                    ? "border-ink bg-honey shadow-[3px_3px_0_0_#1c1a17]"
-                    : "border-ink/20 bg-cream hover:border-ink hover:bg-honey-light"
-                }`}
-              >
-                <span className="text-2xl">{m.icon}</span>
-                <div>
-                  <span className="font-display text-base font-extrabold">{m.label}</span>
-                  <p className="font-body text-xs font-medium text-ink-soft">{m.desc}</p>
-                </div>
-              </button>
-            ))}
+        <>
+          <div
+            className="fixed inset-0 z-40"
+            onClick={() => setShowModeSelect(false)}
+          />
+          <div className="absolute left-0 right-0 top-14 z-50 mx-auto w-full max-w-md px-4 sm:top-16">
+            <div className="rounded-[2rem] border-[4px] border-ink bg-white p-4 text-ink shadow-[8px_8px_0_0_#f5a623]">
+              <p className="mb-3 text-center font-display text-lg font-extrabold">
+                Chọn chế độ học
+              </p>
+              {STUDY_MODES.map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => {
+                    setMode(m.id)
+                    setFlipped(false)
+                    setShowModeSelect(false)
+                  }}
+                  className={`mb-2 flex w-full items-center gap-3 rounded-2xl border-[3px] p-4 text-left transition-all ${
+                    mode === m.id
+                      ? "border-ink bg-honey shadow-[3px_3px_0_0_#1c1a17]"
+                      : "border-ink/20 bg-cream hover:border-ink hover:bg-honey-light"
+                  }`}
+                >
+                  <span className="text-2xl">{m.icon}</span>
+                  <div>
+                    <span className="font-display text-base font-extrabold">{m.label}</span>
+                    <p className="font-body text-xs font-medium text-ink-soft">{m.desc}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        </>
       )}
 
       <div className="flex flex-1 flex-col items-center justify-center px-4 pb-4 sm:px-8">
