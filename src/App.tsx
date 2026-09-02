@@ -382,6 +382,7 @@ export default function App() {
   if (page === "vocab-study" && selectedBook && selectedUnit) {
     return (
       <VocabFlashcard
+        bookId={selectedBook.id}
         unit={selectedUnit}
         bookColor={selectedBook.color}
         bookShadow={selectedBook.shadow}

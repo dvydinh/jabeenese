@@ -1,5 +1,6 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import type { VocabUnit, VocabWord, KanjiInfo } from "../data/vocabData"
+import { fetchUnitWords } from "../data/supabaseApi"
 
 type StudyMode = "meaning" | "reading" | "word"
 
@@ -136,12 +137,15 @@ function ClickableKanji({
 }
 
 export default function VocabFlashcard({
+  bookId,
   unit,
   bookColor,
   bookShadow,
   bookTitle,
   onBack,
 }: {
+}: {
+  bookId: string
   unit: VocabUnit
   bookColor: string
   bookShadow: string
@@ -152,7 +156,36 @@ export default function VocabFlashcard({
   const [flipped, setFlipped] = useState(false)
   const [mode, setMode] = useState<StudyMode>("meaning")
   const [showModeSelect, setShowModeSelect] = useState(false)
-  const word = unit.words[i]
+  const [words, setWords] = useState<VocabWord[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const num = parseInt(unit.name.replace('Bài ', ''))
+    fetchUnitWords(bookId, num).then(fetched => {
+      setWords(fetched)
+      setLoading(false)
+    })
+  }, [bookId, unit])
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 z-40 flex items-center justify-center bg-ink font-body text-cream">
+        <div className="h-16 w-16 animate-spin rounded-full border-[6px] border-ink/20 border-t-honey" />
+      </div>
+    )
+  }
+
+  if (words.length === 0) {
+    return (
+      <div className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-ink p-6 font-body text-cream">
+        <h2 className="font-display text-3xl font-extrabold text-honey">Chưa có dữ liệu</h2>
+        <p className="mt-4 text-center text-lg text-cream/70">Bài học này hiện chưa có từ vựng nào.</p>
+        <button onClick={onBack} className="mt-8 rounded-full bg-honey px-6 py-3 font-display text-xl font-bold text-ink">Quay lại</button>
+      </div>
+    )
+  }
+
+  const word = words[i]
   const { frontMain, frontSub, backMain } = getFrontBack(word, mode)
 
   const goTo = (next: number) => {
@@ -160,8 +193,8 @@ export default function VocabFlashcard({
     setTimeout(() => setI(next), 150)
   }
 
-  const next = () => goTo((i + 1) % unit.words.length)
-  const prev = () => goTo((i - 1 + unit.words.length) % unit.words.length)
+  const next = () => goTo((i + 1) % words.length)
+  const prev = () => goTo((i - 1 + words.length) % words.length)
 
   const isFrontKanji = mode === "meaning" || mode === "reading"
   const isBackKanji = mode === "word"
@@ -199,7 +232,7 @@ export default function VocabFlashcard({
             </span>
           </button>
           <span className="font-display text-sm font-bold text-cream/40">
-            {i + 1}/{unit.words.length}
+            {i + 1}/{words.length}
           </span>
         </div>
       </div>
@@ -315,7 +348,7 @@ export default function VocabFlashcard({
           </button>
 
           <div className="flex gap-1">
-            {unit.words.map((_, idx) => (
+            {words.map((_, idx) => (
               <button
                 key={idx}
                 onClick={(e) => {
@@ -338,24 +371,27 @@ export default function VocabFlashcard({
           </button>
         </div>
 
-        <div className="mt-4 flex flex-wrap justify-center gap-1.5 sm:mt-6">
-          {unit.words.map((w, idx) => (
-            <button
-              key={idx}
-              onClick={(e) => {
-                e.stopPropagation()
-                setFlipped(false)
-                setI(idx)
-              }}
-              className={`rounded-xl border-[2px] px-3 py-1.5 font-kana text-sm font-bold transition-all ${
-                idx === i
-                  ? "border-honey bg-honey text-ink"
-                  : "border-cream/15 bg-white/5 text-cream/50 hover:border-cream/30 hover:bg-white/10 hover:text-cream"
-              }`}
-            >
-              {w.japanese}
-            </button>
-          ))}
+        <div className="hidden flex-1 sm:block"></div>
+        <div className="flex w-full flex-1 justify-center pb-20 sm:pb-0 lg:hidden">
+          <div className="flex flex-wrap justify-center gap-1.5">
+            {words.map((w, idx) => (
+              <button
+                key={idx}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setFlipped(false)
+                  setI(idx)
+                }}
+                className={`rounded-xl border-[2px] px-3 py-1.5 font-kana text-sm font-bold transition-all ${
+                  idx === i
+                    ? "border-honey bg-honey text-ink"
+                    : "border-cream/15 bg-white/5 text-cream/50 hover:border-cream/30 hover:bg-white/10 hover:text-cream"
+                }`}
+              >
+                {w.japanese}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>

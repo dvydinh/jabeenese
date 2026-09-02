@@ -1,5 +1,6 @@
-import { useState } from "react"
-import { vocabBooks, type VocabBook, type VocabUnit } from "../data/vocabData"
+import { useState, useEffect } from "react"
+import type { VocabBook, VocabUnit } from "../data/vocabData"
+import { fetchBooks } from "../data/supabaseApi"
 
 export default function VocabularyPage({
   onSelectUnit,
@@ -9,6 +10,15 @@ export default function VocabularyPage({
   onBack: () => void
 }) {
   const [selectedBook, setSelectedBook] = useState<VocabBook | null>(null)
+  const [books, setBooks] = useState<VocabBook[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchBooks().then((data) => {
+      setBooks(data)
+      setLoading(false)
+    })
+  }, [])
 
   if (selectedBook) {
     return (
@@ -101,13 +111,18 @@ export default function VocabularyPage({
           Mỗi cuốn sách chứa bộ flashcard từ vựng theo từng bài. Chạm để xem các bài.
         </p>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2">
-          {vocabBooks.map((book, idx) => {
-            const totalWords = book.units.reduce((s, u) => s + u.words.length, 0)
-            return (
-              <button
-                key={book.id}
-                onClick={() => setSelectedBook(book)}
+        {loading ? (
+          <div className="mt-10 flex justify-center py-20">
+            <div className="h-12 w-12 animate-spin rounded-full border-[4px] border-ink/20 border-t-honey" />
+          </div>
+        ) : (
+          <div className="mt-10 grid gap-6 sm:grid-cols-2">
+            {books.map((book, idx) => {
+              const totalWords = book.units.reduce((s, u) => s + u.words.length, 0)
+              return (
+                <button
+                  key={book.id}
+                  onClick={() => setSelectedBook(book)}
                 className="book-card group flex gap-5 rounded-[2rem] border-[4px] border-ink bg-white p-6 text-left shadow-[6px_6px_0_0_#1c1a17] transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_12px_0_0_#f5a623]"
                 style={{ animationDelay: `${idx * 100}ms` }}
               >
