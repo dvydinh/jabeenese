@@ -149,25 +149,10 @@ function LandingPage({ onJoinHive, onPathSelect }: { onJoinHive: () => void; onP
                 onClick={() => onPathSelect(p.id)}
                 className={`group flex flex-col rounded-[2rem] border-[4px] border-ink ${p.bg} p-7 text-ink shadow-[8px_8px_0_0_#f5a623] transition-all duration-300 hover:-translate-y-2 hover:shadow-[10px_14px_0_0_#f5a623] active:translate-y-0 active:shadow-[4px_4px_0_0_#f5a623] text-left`}
               >
-                <div className="mb-8 flex items-center justify-between">
-                  <div className="grid h-14 w-14 place-items-center rounded-2xl border-[3px] border-ink bg-white font-kana text-3xl font-black shadow-[4px_4px_0_0_#1c1a17] transition-transform duration-300 group-hover:rotate-[-5deg] group-hover:scale-110">
-                    {p.jp.slice(0, 1)}
-                  </div>
-                  <span className="font-display font-bold text-ink-soft/70">
-                    {p.jp}
-                  </span>
-                </div>
-                <h3 className="font-display text-2xl font-extrabold sm:text-3xl">
-                  {p.title}
-                </h3>
-                <p className="mt-3 flex-1 font-body text-base font-semibold text-ink-soft">
-                  {p.desc}
-                </p>
-                <div className="mt-6 flex items-center gap-2 font-display text-sm font-bold">
-                  <span className="rounded-full border-[2px] border-ink/20 px-3 py-1 text-ink-soft">
-                    {p.count}
-                  </span>
-                </div>
+                <span className="font-kana text-5xl font-black transition-transform duration-300 group-hover:scale-110">{p.jp}</span>
+                <h3 className="mt-4 font-display text-3xl font-extrabold">{p.title}</h3>
+                <p className="mt-2 flex-1 font-body text-base font-medium text-ink-soft">{p.desc}</p>
+                <span className="mt-5 inline-flex w-fit items-center gap-2 rounded-full border-[3px] border-ink bg-honey px-4 py-1.5 font-display text-sm font-bold shadow-[2px_2px_0_0_#1c1a17] transition-transform group-hover:-translate-y-0.5">{p.count} →</span>
               </button>
             ))}
           </div>
