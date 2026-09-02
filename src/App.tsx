@@ -187,14 +187,14 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
         <HoneyMelt from="#1c1a17" to="#ffc32b" />
       </header>
 
-      <section className="relative mx-auto grid max-w-6xl items-center gap-8 px-5 pb-6 pt-10 sm:px-10 lg:grid-cols-[1.1fr_0.9fr] lg:pt-16">
+      <section className="relative mx-auto grid max-w-7xl items-center gap-8 px-6 pb-6 pt-10 sm:px-12 lg:grid-cols-[1.1fr_0.9fr] lg:px-16 lg:pt-16">
         <div className="text-center lg:text-left">
           <span className="inline-block rounded-full border-[3px] border-ink bg-white px-4 py-1.5 font-display text-xs font-bold uppercase tracking-widest shadow-[3px_3px_0_0_#1c1a17] sm:text-sm">
-            日本語 · ngọt ngào & đơn giản
+            日本語 · ngọt ngào &amp; đơn giản
           </span>
-          <h1 className="mt-6 font-display text-6xl font-extrabold leading-[0.95] tracking-tight sm:text-7xl lg:text-8xl">
-            Học tiếng Nhật,
-            <span className="mt-2 block text-white [-webkit-text-stroke:3px_#1c1a17]">ngọt ngào & dễ dàng.</span>
+          <h1 className="mt-6 font-display text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl xl:text-8xl">
+            <span className="whitespace-nowrap">Học tiếng Nhật,</span>
+            <span className="mt-2 block whitespace-nowrap text-white [-webkit-text-stroke:3px_#1c1a17]">ngọt ngào &amp; dễ dàng.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-md font-body text-lg font-medium text-ink-soft sm:text-xl lg:mx-0">
             Bài học kana nhỏ gọn. Mỗi ngày 10 phút là đủ.
