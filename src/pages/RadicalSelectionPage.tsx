@@ -4,10 +4,8 @@ import { fetchRadicalsGroupedByStrokes, type RadicalGroup } from "../data/supaba
 
 export default function RadicalSelectionPage({
   onSelectGroup,
-  onBack,
 }: {
   onSelectGroup: (strokes: number, radicals: RadicalInfo[]) => void
-  onBack: () => void
 }) {
   const [groups, setGroups] = useState<RadicalGroup[]>([])
   const [loading, setLoading] = useState(true)
@@ -21,22 +19,6 @@ export default function RadicalSelectionPage({
 
   return (
     <div className="min-h-screen bg-cream font-body text-ink">
-      <div className="bg-ink">
-        <div className="mx-auto flex max-w-5xl items-center gap-4 px-5 py-4 sm:px-10">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 font-display text-lg font-bold text-cream/70 transition-colors hover:text-honey"
-          >
-            ← Quay lại
-          </button>
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">🫕</span>
-            <span className="font-display text-2xl font-extrabold text-cream">
-              Bộ thủ
-            </span>
-          </div>
-        </div>
-      </div>
 
       <div className="mx-auto max-w-5xl px-5 py-10 sm:px-10">
         <h1 className="font-display text-4xl font-extrabold sm:text-5xl">

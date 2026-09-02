@@ -27,23 +27,11 @@ function FloatingKana({ char, className }: { char: string; className: string }) 
 
 export default function JarSelection({
   onSelect,
-  onBack,
 }: {
   onSelect: (id: string) => void
-  onBack: () => void
 }) {
   return (
     <div className="min-h-screen bg-honey font-body text-ink">
-      <div className="bg-ink">
-        <div className="mx-auto flex max-w-7xl items-center gap-3 px-5 py-4 sm:px-10">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 font-display text-lg font-bold text-cream/70 transition-colors hover:text-honey"
-          >
-            ← Trang chủ
-          </button>
-        </div>
-      </div>
 
       <div className="relative min-h-[calc(100vh-56px)] overflow-hidden">
         <div className="absolute -left-20 top-20 h-96 w-96 rounded-full bg-purple-200/20 blur-[100px]" />

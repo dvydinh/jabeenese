@@ -5,188 +5,22 @@ import VocabularyPage from "./pages/VocabularyPage"
 import VocabFlashcard from "./pages/VocabFlashcard"
 import RadicalSelectionPage from "./pages/RadicalSelectionPage"
 import RadicalFlashcard from "./pages/RadicalFlashcard"
+import KanaChartPage from "./pages/KanaChartPage"
+import Navbar from "./components/Navbar"
+import { JellyBee, HoneyMelt, Shine } from "./components/SharedUI"
 import type { VocabBook, VocabUnit, RadicalInfo } from "./data/vocabData"
 
-type Page = "landing" | "jars" | "vocab" | "vocab-study" | "radicals" | "radicals-study"
-
-function Shine() {
-  return (
-    <span className="pointer-events-none absolute left-4 top-1 h-2.5 w-9 -rotate-6 rounded-full bg-white/70 blur-[1.5px]" />
-  )
-}
-
-function JellyBee({ className = "" }: { className?: string }) {
-  return (
-    <img
-      src={beeImg}
-      alt="Linh vật ong"
-      className={`select-none object-contain ${className}`}
-      draggable={false}
-    />
-  )
-}
-
-function wavePath(phase: number) {
-  const N = 48
-  let d = `M0 80 L0 ${(40 + 18 * Math.sin(phase)).toFixed(1)}`
-  for (let i = 1; i <= N; i++) {
-    const x = (1200 * i) / N
-    const y = 40 + 18 * Math.sin((i / N) * Math.PI * 4 + phase)
-    d += ` L${x.toFixed(1)} ${y.toFixed(1)}`
-  }
-  return d + " L1200 80 Z"
-}
-const WAVE_FRAMES = [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2, 2 * Math.PI]
-  .map(wavePath)
-  .join(";")
-
-function HoneyMelt({ from, to }: { from: string; to: string }) {
-  return (
-    <div className="relative w-full leading-none" style={{ background: from }} aria-hidden="true">
-      <svg viewBox="0 0 1200 80" preserveAspectRatio="none" className="block h-[46px] w-full sm:h-[66px]">
-        <path fill={to}>
-          <animate attributeName="d" dur="7s" repeatCount="indefinite" values={WAVE_FRAMES} calcMode="linear" />
-        </path>
-      </svg>
-    </div>
-  )
-}
-
-const demoCards = [
-  { kana: "あ", romaji: "a", word: "あめ", meaning: "rain / candy" },
-  { kana: "き", romaji: "ki", word: "きって", meaning: "postage stamp" },
-  { kana: "つ", romaji: "tsu", word: "つき", meaning: "the moon" },
-  { kana: "ね", romaji: "ne", word: "ねこ", meaning: "cat" },
-  { kana: "は", romaji: "ha", word: "はな", meaning: "flower" },
-]
-
-function DemoFlashcard() {
-  const [i, setI] = useState(0)
-  const [flipped, setFlipped] = useState(false)
-  const card = demoCards[i]
-
-  const next = () => {
-    setFlipped(false)
-    setTimeout(() => setI((p) => (p + 1) % demoCards.length), 120)
-  }
-
-  return (
-    <div className="flex flex-col items-center gap-6">
-      <div
-        className="relative h-64 w-full max-w-sm cursor-pointer [perspective:1200px] sm:h-72"
-        onClick={() => setFlipped((f) => !f)}
-      >
-        <div
-          className="relative h-full w-full transition-transform duration-500 [transform-style:preserve-3d]"
-          style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
-        >
-          <div className="absolute inset-0 flex flex-col items-center justify-center rounded-[2.5rem] border-[5px] border-ink bg-cream [backface-visibility:hidden] shadow-[10px_12px_0_0_#1c1a17]">
-            <span className="font-kana text-8xl font-black text-ink sm:text-9xl">{card.kana}</span>
-            <span className="mt-2 font-body text-sm font-bold uppercase tracking-[0.3em] text-ink-soft">
-              chạm để lật
-            </span>
-          </div>
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-[2.5rem] border-[5px] border-ink bg-ink text-cream [backface-visibility:hidden] shadow-[10px_12px_0_0_#f5a623]" style={{ transform: "rotateY(180deg)" }}>
-            <span className="font-display text-6xl font-extrabold text-honey sm:text-7xl">{card.romaji}</span>
-            <span className="font-kana text-3xl">{card.word}</span>
-            <span className="font-body text-base font-semibold text-honey-light">{card.meaning}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3">
-        <div className="flex gap-1.5">
-          {demoCards.map((_, idx) => (
-            <span
-              key={idx}
-              className={`h-2.5 rounded-full transition-all duration-300 ${
-                idx === i ? "w-7 bg-ink" : "w-2.5 bg-ink/25"
-              }`}
-            />
-          ))}
-        </div>
-        <button
-          onClick={next}
-          className="animate-wobble relative overflow-hidden rounded-full border-[3px] border-ink bg-honey px-7 py-2.5 font-display text-lg font-bold text-ink shadow-[4px_4px_0_0_#1c1a17] transition-all hover:-translate-y-0.5 hover:shadow-[6px_7px_0_0_#1c1a17] active:translate-y-0.5 active:shadow-[2px_2px_0_0_#1c1a17]"
-        >
-          <Shine />
-          Tiếp →
-        </button>
-      </div>
-    </div>
-  )
-}
+type Page = "landing" | "jars" | "vocab" | "vocab-study" | "radicals" | "radicals-study" | "hiragana" | "katakana"
 
 const paths = [
-  { jp: "ひらがな", title: "Hiragana", desc: "Bảng chữ mềm mại. Bắt đầu từ đây để đọc được mọi từ.", count: "46 chữ", bg: "bg-cream" },
-  { jp: "カタカナ", title: "Katakana", desc: "Bảng chữ góc cạnh cho từ mượn, tên riêng và nhấn mạnh.", count: "46 chữ", bg: "bg-honey-light" },
-  { jp: "かんじ", title: "Kanji đầu tiên", desc: "100 chữ Hán thân thiện, mỗi chữ kèm câu chuyện dễ nhớ.", count: "100 chữ", bg: "bg-cream" },
+  { id: "hiragana", jp: "ひらがな", title: "Hiragana", desc: "Bảng chữ mềm mại. Bắt đầu từ đây để đọc được mọi từ.", count: "46 chữ", bg: "bg-cream" },
+  { id: "katakana", jp: "カタカナ", title: "Katakana", desc: "Bảng chữ góc cạnh cho từ mượn, tên riêng và nhấn mạnh.", count: "46 chữ", bg: "bg-honey-light" },
+  { id: "kanji", jp: "かんじ", title: "Kanji đầu tiên", desc: "100 chữ Hán thân thiện, mỗi chữ kèm câu chuyện dễ nhớ.", count: "100 chữ", bg: "bg-cream" },
 ]
 
-function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
-  const [menuOpen, setMenuOpen] = useState(false)
-  const links = ["Học", "Luyện tập", "Tổ ong", "Giới thiệu"]
-
+function LandingPage({ onJoinHive, onPathSelect }: { onJoinHive: () => void; onPathSelect: (id: string) => void }) {
   return (
     <div className="min-h-full w-full overflow-x-hidden bg-honey font-body text-ink">
-      <header className="sticky top-0 z-30">
-        <div className="bg-ink text-cream">
-          <div className="flex items-center justify-between gap-4 px-5 py-3 sm:px-10">
-            <div className="flex items-center gap-2.5">
-              <div className="h-11 w-11 shrink-0 sm:h-12 sm:w-12">
-                <JellyBee className="h-full w-full" />
-              </div>
-              <span className="font-display text-2xl font-extrabold tracking-tight text-cream">
-                Ja<span className="text-honey">bee</span>nese
-              </span>
-            </div>
-            <nav className="hidden items-center gap-2 font-display text-base font-bold md:flex">
-              {links.map((l) => (
-                <a
-                  key={l}
-                  href="#"
-                  className="rounded-full px-5 py-2 text-cream/85 transition-all hover:bg-white/10 hover:text-honey"
-                >
-                  {l}
-                </a>
-              ))}
-            </nav>
-            <div className="flex items-center gap-2">
-              <button
-                aria-label="Menu"
-                onClick={() => setMenuOpen((o) => !o)}
-                className="grid h-11 w-11 place-items-center rounded-full border-[3px] border-honey bg-ink md:hidden"
-              >
-                <div className="space-y-1.5">
-                  <span className={`block h-0.5 w-5 bg-cream transition-transform ${menuOpen ? "translate-y-2 rotate-45" : ""}`} />
-                  <span className={`block h-0.5 w-5 bg-cream transition-opacity ${menuOpen ? "opacity-0" : ""}`} />
-                  <span className={`block h-0.5 w-5 bg-cream transition-transform ${menuOpen ? "-translate-y-2 -rotate-45" : ""}`} />
-                </div>
-              </button>
-            </div>
-          </div>
-
-          {menuOpen && (
-            <div className="border-t border-cream/20 px-5 py-4 md:hidden">
-              <nav className="flex flex-col gap-1 font-display text-xl font-bold text-cream">
-                {links.map((l) => (
-                  <a key={l} href="#" onClick={() => setMenuOpen(false)} className="rounded-2xl px-3 py-2 transition-colors hover:bg-white/10">{l}</a>
-                ))}
-                <button
-                  onClick={() => { setMenuOpen(false); onJoinHive() }}
-                  className="relative mt-2 overflow-hidden rounded-full bg-honey px-6 py-2.5 font-display text-lg font-bold text-ink"
-                >
-                  <Shine />
-                  Bắt đầu
-                </button>
-              </nav>
-            </div>
-          )}
-        </div>
-
-        <HoneyMelt from="#1c1a17" to="#ffc32b" />
-      </header>
-
       <section className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 pb-12 pt-16 sm:px-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 lg:px-16 lg:pb-16 lg:pt-24">
         <div className="text-center lg:text-left">
           <span className="inline-block rounded-full border-[3px] border-ink bg-white px-4 py-1.5 font-display text-xs font-bold uppercase tracking-widest shadow-[3px_3px_0_0_#1c1a17] sm:text-sm">
@@ -245,14 +79,8 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
           </p>
           <div className="mt-10 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
             {paths.map((p) => (
-              <article
+              <button
                 key={p.title}
-                className={`group flex flex-col rounded-[2rem] border-[4px] border-ink ${p.bg} p-7 text-ink shadow-[8px_8px_0_0_#f5a623] transition-all duration-300 hover:-translate-y-2 hover:shadow-[10px_14px_0_0_#f5a623]`}
-              >
-                <span className="font-kana text-5xl font-black transition-transform duration-300 group-hover:scale-110">{p.jp}</span>
-                <h3 className="mt-4 font-display text-3xl font-extrabold">{p.title}</h3>
-                <p className="mt-2 flex-1 font-body text-base font-medium text-ink-soft">{p.desc}</p>
-                <span className="mt-5 inline-flex w-fit items-center gap-2 rounded-full border-[3px] border-ink bg-honey px-4 py-1.5 font-display text-sm font-bold">{p.count} →</span>
               </article>
             ))}
           </div>
@@ -353,79 +181,114 @@ export default function App() {
     window.scrollTo(0, 0)
   }
 
-  if (page === "jars") {
-    return (
-      <JarSelection
-        onSelect={(id) => {
-          if (id === "vocabulary") {
+  const handleBack = () => {
+    if (page === "vocab" || page === "radicals") {
+      setPage("jars")
+      window.scrollTo(0, 0)
+    } else {
+      goHome()
+    }
+  }
+
+  const handlePathSelect = (id: string) => {
+    if (id === "kanji") {
+      alert("Tính năng học Kanji theo lộ trình đang được xây dựng. Coming soon! 🚧")
+    } else {
+      setPage(id as Page)
+      window.scrollTo(0, 0)
+    }
+  }
+
+  const isStudy = page === "vocab-study" || page === "radicals-study"
+  const meltToColor = page === "landing" ? "#ffc32b" : page === "katakana" ? "#ffe08a" : "#fff8e6"
+
+  return (
+    <>
+      {!isStudy && (
+        <Navbar
+          meltToColor={meltToColor}
+          onLogoClick={goHome}
+          onBack={page !== "landing" ? handleBack : undefined}
+        />
+      )}
+
+      {page === "landing" && (
+        <LandingPage onJoinHive={goToJars} onPathSelect={handlePathSelect} />
+      )}
+
+      {page === "hiragana" && (
+        <KanaChartPage type="hiragana" />
+      )}
+
+      {page === "katakana" && (
+        <KanaChartPage type="katakana" />
+      )}
+
+      {page === "jars" && (
+        <JarSelection
+          onSelect={(id) => {
+            if (id === "vocabulary") {
+              setPage("vocab")
+              window.scrollTo(0, 0)
+            } else if (id === "radicals") {
+              setPage("radicals")
+              window.scrollTo(0, 0)
+            } else if (id === "kanji") {
+              alert("Tính năng học Kanji theo lộ trình đang được xây dựng. Coming soon! 🚧")
+            }
+          }}
+          onBack={goHome}
+        />
+      )}
+
+      {page === "vocab" && (
+        <VocabularyPage
+          onSelectUnit={(book, unit) => {
+            setSelectedBook(book)
+            setSelectedUnit(unit)
+            setPage("vocab-study")
+            window.scrollTo(0, 0)
+          }}
+          onBack={goToJars}
+        />
+      )}
+
+      {page === "radicals" && (
+        <RadicalSelectionPage
+          onSelectGroup={(strokes, radicals) => {
+            setSelectedStrokes(strokes)
+            setSelectedRadicalsList(radicals)
+            setPage("radicals-study")
+            window.scrollTo(0, 0)
+          }}
+          onBack={goToJars}
+        />
+      )}
+
+      {page === "vocab-study" && selectedBook && selectedUnit && (
+        <VocabFlashcard
+          bookId={selectedBook.id}
+          unit={selectedUnit}
+          bookColor={selectedBook.color}
+          bookShadow={selectedBook.shadow}
+          bookTitle={selectedBook.title}
+          onBack={() => {
             setPage("vocab")
             window.scrollTo(0, 0)
-          } else if (id === "radicals") {
+          }}
+        />
+      )}
+
+      {page === "radicals-study" && selectedStrokes !== null && (
+        <RadicalFlashcard
+          strokes={selectedStrokes}
+          radicals={selectedRadicalsList}
+          onBack={() => {
             setPage("radicals")
             window.scrollTo(0, 0)
-          }
-        }}
-        onBack={goHome}
-      />
-    )
-  }
-
-  if (page === "vocab") {
-    return (
-      <VocabularyPage
-        onSelectUnit={(book, unit) => {
-          setSelectedBook(book)
-          setSelectedUnit(unit)
-          setPage("vocab-study")
-          window.scrollTo(0, 0)
-        }}
-        onBack={goToJars}
-      />
-    )
-  }
-
-  if (page === "radicals") {
-    return (
-      <RadicalSelectionPage
-        onSelectGroup={(strokes, radicals) => {
-          setSelectedStrokes(strokes)
-          setSelectedRadicalsList(radicals)
-          setPage("radicals-study")
-          window.scrollTo(0, 0)
-        }}
-        onBack={goToJars}
-      />
-    )
-  }
-
-  if (page === "vocab-study" && selectedBook && selectedUnit) {
-    return (
-      <VocabFlashcard
-        bookId={selectedBook.id}
-        unit={selectedUnit}
-        bookColor={selectedBook.color}
-        bookShadow={selectedBook.shadow}
-        bookTitle={selectedBook.title}
-        onBack={() => {
-          setPage("vocab")
-          window.scrollTo(0, 0)
-        }}
-      />
-    )
-  }
-
-  if (page === "radicals-study" && selectedStrokes !== null) {
-    return (
-      <RadicalFlashcard
-        strokes={selectedStrokes}
-        radicals={selectedRadicalsList}
-        onBack={() => {
-          setPage("radicals")
-          window.scrollTo(0, 0)
-        }}
-      />
-    )
-  }
-
-  return <LandingPage onJoinHive={goToJars} />
+          }}
+        />
+      )}
+    </>
+  )
 }

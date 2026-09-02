@@ -4,10 +4,8 @@ import { fetchBooks } from "../data/supabaseApi"
 
 export default function VocabularyPage({
   onSelectUnit,
-  onBack,
 }: {
   onSelectUnit: (book: VocabBook, unit: VocabUnit) => void
-  onBack: () => void
 }) {
   const [selectedBook, setSelectedBook] = useState<VocabBook | null>(null)
   const [books, setBooks] = useState<VocabBook[]>([])
@@ -23,29 +21,28 @@ export default function VocabularyPage({
   if (selectedBook) {
     return (
       <div className="min-h-screen bg-cream font-body text-ink">
-        <div className="bg-ink">
-          <div className="mx-auto flex max-w-5xl items-center gap-4 px-5 py-4 sm:px-10">
+
+
+        <div className="mx-auto max-w-5xl px-5 py-8 sm:px-10">
+          <div className="mb-6 flex items-center gap-4">
             <button
               onClick={() => setSelectedBook(null)}
-              className="flex items-center gap-2 font-display text-lg font-bold text-cream/70 transition-colors hover:text-honey"
+              className="rounded-full border-[2px] border-ink/20 bg-ink/5 px-4 py-2 font-display text-sm font-bold text-ink-soft transition-colors hover:border-ink hover:bg-ink hover:text-cream"
             >
-              ← Quay lại
+              ← Chọn sách
             </button>
             <div className="flex items-center gap-2">
               <span
-                className="grid h-9 w-9 place-items-center rounded-xl border-[2px] border-ink font-kana text-base font-bold text-white"
+                className="grid h-8 w-8 place-items-center rounded-lg border-[2px] border-ink font-kana text-sm font-bold text-white"
                 style={{ background: selectedBook.color }}
               >
                 本
               </span>
-              <span className="font-display text-xl font-extrabold text-cream">
+              <span className="font-display text-2xl font-extrabold text-ink">
                 {selectedBook.title}
               </span>
             </div>
           </div>
-        </div>
-
-        <div className="mx-auto max-w-5xl px-5 py-10 sm:px-10">
           <h1 className="font-display text-4xl font-extrabold sm:text-5xl">
             Chọn bài học
           </h1>
@@ -86,22 +83,7 @@ export default function VocabularyPage({
 
   return (
     <div className="min-h-screen bg-cream font-body text-ink">
-      <div className="bg-ink">
-        <div className="mx-auto flex max-w-5xl items-center gap-4 px-5 py-4 sm:px-10">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 font-display text-lg font-bold text-cream/70 transition-colors hover:text-honey"
-          >
-            ← Quay lại
-          </button>
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">🍯</span>
-            <span className="font-display text-2xl font-extrabold text-cream">
-              Từ vựng
-            </span>
-          </div>
-        </div>
-      </div>
+
 
       <div className="mx-auto max-w-5xl px-5 py-10 sm:px-10">
         <h1 className="font-display text-4xl font-extrabold sm:text-5xl">
