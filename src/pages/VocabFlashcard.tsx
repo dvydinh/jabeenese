@@ -386,35 +386,33 @@ export default function VocabFlashcard({
               transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)",
             }}
           >
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-[3rem] border-[5px] border-white/20 bg-gradient-to-br from-white/15 to-white/5 p-8 [backface-visibility:hidden] shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-[3rem] border-[5px] border-ink bg-cream p-8 [backface-visibility:hidden] shadow-[10px_12px_0_0_#1c1a17]">
               {isFrontKanji ? (
                 <ClickableKanji
                   text={frontMain}
                   kanjiList={word.kanji}
                   onKanjiClick={setPopup}
-                  className="font-kana text-7xl font-black text-cream sm:text-8xl lg:text-9xl"
+                  className="font-kana text-7xl font-black text-ink sm:text-8xl lg:text-9xl"
                 />
               ) : (
-                <span className="font-kana text-6xl font-black text-cream sm:text-7xl lg:text-8xl">
+                <span className="font-kana text-6xl font-black text-ink sm:text-7xl lg:text-8xl">
                   {frontMain}
                 </span>
               )}
-              <div className="h-[3px] w-20 rounded-full bg-cream/20" />
-              <span className="font-body text-xl font-semibold text-cream/60 sm:text-2xl">
+              <div className="h-[3px] w-20 rounded-full bg-ink/10" />
+              <span className="font-body text-xl font-semibold text-ink-soft sm:text-2xl">
                 {frontSub}
               </span>
-              <span className="mt-2 rounded-full border-[2px] border-cream/20 px-4 py-1.5 font-display text-xs font-bold uppercase tracking-widest text-cream/30">
+              <span className="mt-2 font-body text-sm font-bold uppercase tracking-[0.3em] text-ink-soft/60">
                 chạm để lật
               </span>
             </div>
 
             <div
-              className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-[3rem] border-[5px] p-8 [backface-visibility:hidden]"
+              className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-[3rem] border-[5px] border-ink bg-ink p-8 text-cream [backface-visibility:hidden]"
               style={{
                 transform: "rotateY(180deg)",
-                background: `linear-gradient(135deg, ${bookColor}, ${bookShadow})`,
-                borderColor: bookShadow,
-                boxShadow: `0 20px 60px rgba(0,0,0,0.3)`,
+                boxShadow: `10px 12px 0 0 ${bookShadow}`,
               }}
             >
               {isBackKanji ? (
@@ -422,18 +420,18 @@ export default function VocabFlashcard({
                   text={backMain}
                   kanjiList={word.kanji}
                   onKanjiClick={setPopup}
-                  className="font-kana text-7xl font-black text-white sm:text-8xl lg:text-9xl"
+                  className="font-kana text-7xl font-black text-honey sm:text-8xl lg:text-9xl"
                 />
               ) : mode === "reading" ? (
-                <span className="font-kana text-6xl font-black text-white sm:text-7xl lg:text-8xl">
+                <span className="font-kana text-6xl font-black text-honey sm:text-7xl lg:text-8xl">
                   {backMain}
                 </span>
               ) : (
-                <span className="text-center font-display text-4xl font-extrabold text-white sm:text-5xl lg:text-6xl">
+                <span className="text-center font-display text-4xl font-extrabold text-honey sm:text-5xl lg:text-6xl">
                   {backMain}
                 </span>
               )}
-              <span className="mt-2 rounded-full bg-white/20 px-4 py-1.5 font-display text-xs font-bold uppercase tracking-widest text-white/60">
+              <span className="mt-2 font-display text-sm font-bold uppercase tracking-widest text-honey-light">
                 đã lật ✓
               </span>
             </div>
