@@ -78,18 +78,13 @@ export default function JarSelection({
             </p>
           </div>
 
-          <div className="mx-auto mt-10 grid max-w-[520px] grid-cols-2 gap-4 sm:mt-12 sm:gap-5 lg:max-w-none lg:grid-cols-3 lg:gap-6">
-            {jars.slice(0, 3).map((jar, idx) => (
-              <JarCard key={jar.id} jar={jar} idx={idx} onSelect={onSelect} />
-            ))}
-          </div>
-          <div className="mx-auto mt-4 grid max-w-[520px] grid-cols-2 gap-4 sm:mt-5 sm:gap-5 lg:mt-6 lg:max-w-[66%] lg:gap-6">
-            {jars.slice(3).map((jar, idx) => (
-              <JarCard key={jar.id} jar={jar} idx={idx + 3} onSelect={onSelect} />
+          <div className="mt-16 flex flex-col">
+            {jars.map((jar, idx) => (
+              <SkillRow key={jar.id} jar={jar} idx={idx} onSelect={onSelect} />
             ))}
           </div>
 
-          <div className="mt-12 flex items-center justify-center gap-2 font-display text-lg font-bold text-ink-soft">
+          <div className="mt-20 flex items-center justify-center gap-2 font-display text-lg font-bold text-ink-soft">
             <span className="inline-block animate-pulse">✨</span>
             Nhiều hương vị sắp ra mắt
             <span className="inline-block animate-pulse">✨</span>
@@ -100,7 +95,7 @@ export default function JarSelection({
   )
 }
 
-function JarCard({
+function SkillRow({
   jar,
   idx,
   onSelect,
@@ -109,37 +104,63 @@ function JarCard({
   idx: number
   onSelect: (id: string) => void
 }) {
+  const isEven = idx % 2 === 0
+
   return (
-    <button
-      onClick={() => {
-        if (jar.available) onSelect(jar.id)
-      }}
-      className={`jar-card group relative flex aspect-square flex-col items-center justify-center gap-3 rounded-[2.5rem] border-[5px] border-ink bg-white text-center transition-all duration-300 sm:gap-4 sm:rounded-[3rem] ${
-        jar.available
-          ? "cursor-pointer shadow-[8px_8px_0_0_#1c1a17] hover:-translate-y-3 hover:shadow-[10px_14px_0_0_#a78bfa]"
-          : "cursor-not-allowed opacity-50 shadow-[6px_6px_0_0_#ccc]"
+    <div
+      className={`group flex flex-col items-center gap-8 border-b-[3px] border-ink/10 py-12 last:border-b-0 sm:gap-16 sm:py-20 lg:gap-24 ${
+        isEven ? "sm:flex-row" : "sm:flex-row-reverse"
       }`}
-      style={{ animationDelay: `${idx * 80}ms` }}
     >
-      <span className="jar-emoji text-6xl transition-transform duration-300 sm:text-7xl lg:text-8xl">
-        {jar.emoji}
-      </span>
-      <span className="font-kana text-xl font-black text-ink/25 sm:text-2xl">
-        {jar.jp}
-      </span>
-      <span className="font-display text-xl font-extrabold leading-tight sm:text-2xl lg:text-3xl">
-        {jar.label}
-      </span>
-      {!jar.available && (
-        <span className="rounded-full border-[2px] border-ink/15 bg-cream px-3 py-1 font-display text-xs font-bold text-ink-soft sm:text-sm">
-          Sắp có
+      {/* Hình ảnh minh họa */}
+      <div className="flex flex-1 justify-center">
+        <div className="relative flex aspect-square w-56 items-center justify-center rounded-[4rem] border-[6px] border-ink bg-white shadow-[10px_12px_0_0_#1c1a17] transition-all duration-500 hover:-translate-y-4 hover:rotate-3 hover:shadow-[16px_20px_0_0_#a78bfa] sm:w-64 lg:w-80 lg:rounded-[5rem]">
+          <span className="text-7xl drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)] transition-transform duration-500 group-hover:scale-110 sm:text-8xl lg:text-9xl">
+            {jar.emoji}
+          </span>
+          {/* Lớp phủ tạo hiệu ứng bóng lưỡng (glossy) cho khối vuông */}
+          <div className="pointer-events-none absolute inset-0 rounded-[3.5rem] bg-gradient-to-tr from-transparent via-white/50 to-transparent opacity-60 lg:rounded-[4.5rem]" />
+        </div>
+      </div>
+
+      {/* Thông tin & Nút */}
+      <div
+        className={`flex flex-1 flex-col items-center text-center sm:items-start sm:text-left ${
+          isEven ? "sm:items-start sm:text-left" : "sm:items-end sm:text-right"
+        }`}
+      >
+        <span className="font-kana text-3xl font-black text-ink/20 sm:text-4xl lg:text-5xl">
+          {jar.jp}
         </span>
-      )}
-      {jar.available && (
-        <span className="rounded-full border-[3px] border-ink bg-honey px-5 py-2 font-display text-sm font-bold shadow-[3px_3px_0_0_#1c1a17] transition-all duration-300 group-hover:bg-purple-300 group-hover:shadow-[4px_5px_0_0_#7c3aed] sm:text-base">
-          Bắt đầu →
-        </span>
-      )}
-    </button>
+        <h2 className="mt-2 font-display text-4xl font-extrabold text-ink sm:text-5xl lg:text-6xl">
+          {jar.label}
+        </h2>
+        <p className="mt-4 max-w-sm font-body text-lg font-medium text-ink-soft sm:mt-6 sm:text-xl">
+          {jar.available
+            ? `Khám phá hương vị tuyệt hảo của ${jar.label} và làm giàu kho tàng tiếng Nhật của bạn!`
+            : "Hương vị này đang được ong thợ miệt mài ủ, hãy quay lại sau nhé!"}
+        </p>
+
+        <div className="mt-8 sm:mt-10">
+          {jar.available ? (
+            <button
+              onClick={() => onSelect(jar.id)}
+              className="relative overflow-hidden rounded-full border-[5px] border-ink bg-[#FFB347] px-10 py-4 font-display text-2xl font-black text-ink shadow-[0_8px_0_0_#1c1a17,0_15px_30px_rgba(255,179,71,0.5)] transition-all hover:-translate-y-2 hover:shadow-[0_12px_0_0_#1c1a17,0_20px_40px_rgba(255,179,71,0.6)] active:translate-y-2 active:shadow-[0_0px_0_0_#1c1a17] sm:px-12 sm:py-5 sm:text-3xl"
+            >
+              {/* Bóng bẩy (glossy overlay) cho nút */}
+              <div className="absolute inset-x-0 -top-4 bottom-1/2 rounded-full bg-white/40 blur-sm" />
+              <div className="relative z-10 flex items-center gap-3">
+                Bắt đầu
+                <span className="text-3xl sm:text-4xl">🐝</span>
+              </div>
+            </button>
+          ) : (
+            <div className="rounded-full border-[4px] border-ink/20 bg-cream px-10 py-4 font-display text-xl font-bold text-ink/40 shadow-[0_6px_0_0_rgba(28,26,23,0.1)] sm:px-12 sm:py-5 sm:text-2xl">
+              Sắp ra mắt
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   )
 }
