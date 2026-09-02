@@ -115,11 +115,11 @@ export default function RadicalFlashcard({
 
             {/* Back: Nghia & Note */}
             <div
-              className="absolute inset-0 flex flex-col items-center justify-center rounded-[3rem] border-[5px] border-ink bg-ink p-8 text-cream [backface-visibility:hidden] shadow-[10px_12px_0_0_#c084fc] sm:p-12"
+              className="absolute inset-0 flex flex-col items-center justify-center rounded-[3rem] border-[5px] border-ink bg-ink p-8 text-cream [backface-visibility:hidden] shadow-[10px_12px_0_0_#f5a623] sm:p-12"
               style={{ transform: "rotateY(180deg)" }}
             >
               <div className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
-                <span className="font-display text-5xl font-extrabold text-purple-400 sm:text-6xl">
+                <span className="font-display text-5xl font-extrabold text-honey sm:text-6xl">
                   {rad.nghia}
                 </span>
                 {rad.note && (

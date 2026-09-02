@@ -12,7 +12,7 @@ export default function Navbar({ meltToColor, onLogoClick, onBack }: NavbarProps
   const links = ["Học", "Luyện tập", "Tổ ong", "Giới thiệu"]
 
   return (
-    <header className="sticky top-0 z-50">
+    <header className="relative z-50">
       <div className="bg-ink text-cream">
         {/* Increased padding for thicker navbar (py-5 sm:py-6 instead of py-3) */}
         <div className="flex items-center justify-between gap-4 px-5 py-5 sm:px-10 sm:py-6">
