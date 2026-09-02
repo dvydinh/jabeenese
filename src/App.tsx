@@ -17,7 +17,7 @@ function JellyBee({ className = "" }: { className?: string }) {
   return (
     <img
       src={beeImg}
-      alt="Round jelly bee mascot"
+      alt="Linh vật ong"
       className={`select-none object-contain ${className}`}
       draggable={false}
     />
@@ -81,7 +81,7 @@ function DemoFlashcard() {
           <div className="absolute inset-0 flex flex-col items-center justify-center rounded-[2.5rem] border-[5px] border-ink bg-cream [backface-visibility:hidden] shadow-[10px_12px_0_0_#1c1a17]">
             <span className="font-kana text-8xl font-black text-ink sm:text-9xl">{card.kana}</span>
             <span className="mt-2 font-body text-sm font-bold uppercase tracking-[0.3em] text-ink-soft">
-              tap to reveal
+              chạm để lật
             </span>
           </div>
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-[2.5rem] border-[5px] border-ink bg-ink text-cream [backface-visibility:hidden] shadow-[10px_12px_0_0_#f5a623]" style={{ transform: "rotateY(180deg)" }}>
@@ -108,7 +108,7 @@ function DemoFlashcard() {
           className="animate-wobble relative overflow-hidden rounded-full border-[3px] border-ink bg-honey px-7 py-2.5 font-display text-lg font-bold text-ink shadow-[4px_4px_0_0_#1c1a17] transition-all hover:-translate-y-0.5 hover:shadow-[6px_7px_0_0_#1c1a17] active:translate-y-0.5 active:shadow-[2px_2px_0_0_#1c1a17]"
         >
           <Shine />
-          Next →
+          Tiếp →
         </button>
       </div>
     </div>
@@ -123,7 +123,7 @@ const paths = [
 
 function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
   const [menuOpen, setMenuOpen] = useState(false)
-  const links = ["Learn", "Practice", "Hive", "About"]
+  const links = ["Học", "Luyện tập", "Tổ ong", "Giới thiệu"]
 
   return (
     <div className="min-h-full w-full overflow-x-hidden bg-honey font-body text-ink">
@@ -149,7 +149,7 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
                 className="relative hidden overflow-hidden rounded-full bg-honey px-6 py-2 font-display text-base font-bold text-ink shadow-[3px_3px_0_0_rgba(0,0,0,0.35)] transition-all hover:-translate-y-0.5 sm:block"
               >
                 <Shine />
-                Start free
+                Bắt đầu
               </button>
 
               <button
@@ -177,7 +177,7 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
                   className="relative mt-2 overflow-hidden rounded-full bg-honey px-6 py-2.5 font-display text-lg font-bold text-ink"
                 >
                   <Shine />
-                  Start free
+                  Bắt đầu
                 </button>
               </nav>
             </div>
@@ -190,11 +190,11 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
       <section className="relative mx-auto grid max-w-6xl items-center gap-8 px-5 pb-6 pt-10 sm:px-10 lg:grid-cols-[1.1fr_0.9fr] lg:pt-16">
         <div className="text-center lg:text-left">
           <span className="inline-block rounded-full border-[3px] border-ink bg-white px-4 py-1.5 font-display text-xs font-bold uppercase tracking-widest shadow-[3px_3px_0_0_#1c1a17] sm:text-sm">
-            日本語 · sweet &amp; simple
+            日本語 · ngọt ngào & đơn giản
           </span>
           <h1 className="mt-6 font-display text-6xl font-extrabold leading-[0.95] tracking-tight sm:text-7xl lg:text-8xl">
-            Learn Japanese,
-            <span className="mt-2 block text-white [-webkit-text-stroke:3px_#1c1a17]">sweet &amp; simple.</span>
+            Học tiếng Nhật,
+            <span className="mt-2 block text-white [-webkit-text-stroke:3px_#1c1a17]">ngọt ngào & dễ dàng.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-md font-body text-lg font-medium text-ink-soft sm:text-xl lg:mx-0">
             Bài học kana nhỏ gọn. Mỗi ngày 10 phút là đủ.
@@ -205,7 +205,7 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
               className="animate-wobble relative w-full overflow-hidden rounded-full border-[4px] border-ink bg-white px-8 py-3.5 font-display text-lg font-bold text-ink shadow-[6px_6px_0_0_#1c1a17] transition-all hover:-translate-y-1 hover:shadow-[8px_10px_0_0_#1c1a17] active:translate-y-0.5 sm:w-auto sm:text-xl"
             >
               <Shine />
-              Join the hive for free
+              Tham gia tổ ong miễn phí
             </button>
             <div className="flex items-center gap-2 font-display font-bold">
               <div className="flex -space-x-2">
@@ -213,7 +213,7 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
                   <span key={c} className="h-8 w-8 rounded-full border-[3px] border-ink" style={{ background: c }} />
                 ))}
               </div>
-              <span>28k in the hive</span>
+              <span>28k trong tổ ong</span>
             </div>
           </div>
         </div>
@@ -315,7 +315,7 @@ function LandingPage({ onJoinHive }: { onJoinHive: () => void }) {
               className="animate-wobble relative overflow-hidden rounded-full bg-honey px-9 py-4 font-display text-xl font-bold text-ink shadow-[6px_6px_0_0_#ffffff] transition-all hover:-translate-y-1 active:translate-y-0.5"
             >
               <Shine />
-              Join the hive — free
+              Tham gia tổ ong — miễn phí
             </button>
           </div>
         </div>

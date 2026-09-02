@@ -51,16 +51,10 @@ function KanjiPopup({
         className="kanji-popup w-full max-w-md rounded-[2.5rem] border-[5px] border-ink bg-white p-8 shadow-[10px_12px_0_0_#f5a623] sm:p-10"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between">
+        <div className="flex items-center justify-center">
           <span className="font-kana text-8xl font-black text-ink sm:text-9xl">
             {info.character}
           </span>
-          <button
-            onClick={onClose}
-            className="grid h-10 w-10 place-items-center rounded-full border-[3px] border-ink bg-cream font-display text-lg font-bold transition-all hover:bg-honey"
-          >
-            ✕
-          </button>
         </div>
 
         <div className="mt-6 space-y-5">

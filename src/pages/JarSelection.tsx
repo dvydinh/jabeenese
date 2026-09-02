@@ -6,15 +6,24 @@ type JarItem = {
   jp: string
   emoji: string
   available: boolean
+  color: string
 }
 
 const jars: JarItem[] = [
-  { id: "vocabulary", label: "Từ vựng", jp: "語彙", emoji: "🍯", available: true },
-  { id: "grammar", label: "Ngữ pháp", jp: "文法", emoji: "🧈", available: false },
-  { id: "kanji", label: "Kanji", jp: "漢字", emoji: "🫕", available: false },
-  { id: "reading", label: "Đọc hiểu", jp: "読解", emoji: "📖", available: false },
-  { id: "listening", label: "Nghe hiểu", jp: "聴解", emoji: "🎧", available: false },
+  { id: "vocabulary", label: "Từ vựng", jp: "語彙", emoji: "🍯", available: true, color: "#ffc32b" },
+  { id: "grammar", label: "Ngữ pháp", jp: "文法", emoji: "🧈", available: false, color: "#c4b5fd" },
+  { id: "kanji", label: "Kanji", jp: "漢字", emoji: "🫕", available: false, color: "#a78bfa" },
+  { id: "reading", label: "Đọc hiểu", jp: "読解", emoji: "📖", available: false, color: "#ddd6fe" },
+  { id: "listening", label: "Nghe hiểu", jp: "聴解", emoji: "🎧", available: false, color: "#ede9fe" },
 ]
+
+function FloatingKana({ char, className }: { char: string; className: string }) {
+  return (
+    <span className={`pointer-events-none absolute hidden font-kana font-black text-ink/[0.04] lg:block ${className}`}>
+      {char}
+    </span>
+  )
+}
 
 export default function JarSelection({
   onSelect,
@@ -36,25 +45,33 @@ export default function JarSelection({
         </div>
       </div>
 
-      <div className="relative overflow-hidden">
-        <div className="absolute -left-10 -top-10 h-60 w-60 rounded-full bg-white/20 blur-3xl" />
-        <div className="absolute -right-10 bottom-0 h-48 w-48 rounded-full bg-honey-deep/30 blur-3xl" />
+      <div className="relative min-h-[calc(100vh-56px)] overflow-hidden">
+        <div className="absolute -left-20 top-20 h-80 w-80 rounded-full bg-purple-200/20 blur-[80px]" />
+        <div className="absolute -right-20 top-40 h-72 w-72 rounded-full bg-purple-300/15 blur-[80px]" />
+        <div className="absolute bottom-10 left-1/4 h-60 w-60 rounded-full bg-honey-deep/20 blur-[60px]" />
 
-        <div className="relative mx-auto max-w-5xl px-5 pb-16 pt-12 sm:px-10 sm:pt-16">
+        <FloatingKana char="あ" className="left-[5%] top-[15%] text-[10rem] rotate-[-15deg]" />
+        <FloatingKana char="カ" className="right-[4%] top-[10%] text-[12rem] rotate-[10deg]" />
+        <FloatingKana char="漢" className="left-[3%] bottom-[20%] text-[9rem] rotate-[8deg]" />
+        <FloatingKana char="の" className="right-[6%] bottom-[15%] text-[11rem] rotate-[-12deg]" />
+        <FloatingKana char="日" className="left-[8%] top-[55%] text-[8rem] rotate-[20deg]" />
+        <FloatingKana char="本" className="right-[8%] top-[50%] text-[9rem] rotate-[-8deg]" />
+
+        <div className="relative mx-auto max-w-4xl px-5 pb-20 pt-12 sm:px-10 sm:pt-16">
           <div className="flex flex-col items-center text-center">
-            <div className="jelly-bounce h-36 w-36 sm:h-44 sm:w-44">
+            <div className="jelly-bounce h-32 w-32 sm:h-40 sm:w-40">
               <img
                 src={beeImg}
-                alt="Bee mascot"
+                alt="Linh vật ong"
                 className="h-full w-full select-none object-contain drop-shadow-[6px_10px_0_rgba(28,26,23,0.12)]"
                 draggable={false}
               />
             </div>
 
             <h1 className="mt-8 font-display text-5xl font-extrabold leading-tight sm:text-6xl lg:text-7xl">
-              What would you like
+              Bạn muốn nếm thử
               <span className="mt-2 block text-white [-webkit-text-stroke:3px_#1c1a17]">
-                to taste?
+                hương vị nào?
               </span>
             </h1>
             <p className="mt-5 max-w-md font-body text-xl font-semibold text-ink-soft">
@@ -62,46 +79,41 @@ export default function JarSelection({
             </p>
           </div>
 
-          <div className="mt-14 flex justify-center">
-            <div className="grid w-full max-w-3xl grid-cols-2 gap-5 sm:gap-6 md:grid-cols-3">
-              {jars.map((jar, idx) => (
-                <button
-                  key={jar.id}
-                  onClick={() => {
-                    if (jar.available) onSelect(jar.id)
-                  }}
-                  className={`jar-card group relative flex flex-col items-center gap-3 rounded-[2.5rem] border-[5px] border-ink bg-white px-6 py-10 text-center transition-all duration-300 sm:gap-4 sm:px-8 sm:py-12 ${
-                    jar.available
-                      ? "cursor-pointer shadow-[8px_8px_0_0_#1c1a17] hover:-translate-y-3 hover:shadow-[10px_14px_0_0_#f5a623]"
-                      : "cursor-not-allowed opacity-50 shadow-[6px_6px_0_0_#ccc]"
-                  } ${idx >= 3 ? "md:col-span-1" : ""}`}
-                  style={{
-                    animationDelay: `${idx * 100}ms`,
-                    ...(idx === 3 ? { gridColumn: undefined } : {}),
-                  }}
-                >
-                  <span className="jar-emoji text-7xl transition-transform duration-300 sm:text-8xl">
-                    {jar.emoji}
+          <div className="mx-auto mt-14 grid max-w-[640px] grid-cols-2 gap-5 sm:gap-6 md:max-w-none md:grid-cols-5">
+            {jars.map((jar, idx) => (
+              <button
+                key={jar.id}
+                onClick={() => {
+                  if (jar.available) onSelect(jar.id)
+                }}
+                className={`jar-card group relative flex aspect-square flex-col items-center justify-center gap-2 rounded-[2rem] border-[5px] border-ink bg-white text-center transition-all duration-300 sm:gap-3 sm:rounded-[2.5rem] ${
+                  jar.available
+                    ? "cursor-pointer shadow-[8px_8px_0_0_#1c1a17] hover:-translate-y-3 hover:shadow-[10px_14px_0_0_#a78bfa]"
+                    : "cursor-not-allowed opacity-50 shadow-[6px_6px_0_0_#ccc]"
+                }`}
+                style={{ animationDelay: `${idx * 80}ms` }}
+              >
+                <span className="jar-emoji text-5xl transition-transform duration-300 sm:text-6xl md:text-7xl">
+                  {jar.emoji}
+                </span>
+                <span className="font-kana text-lg font-black text-ink/25 sm:text-xl">
+                  {jar.jp}
+                </span>
+                <span className="font-display text-base font-extrabold leading-tight sm:text-lg md:text-xl">
+                  {jar.label}
+                </span>
+                {!jar.available && (
+                  <span className="rounded-full border-[2px] border-ink/15 bg-cream px-3 py-1 font-display text-[10px] font-bold text-ink-soft sm:text-xs">
+                    Sắp có
                   </span>
-                  <span className="font-kana text-2xl font-black text-ink/30 sm:text-3xl">
-                    {jar.jp}
+                )}
+                {jar.available && (
+                  <span className="rounded-full border-[3px] border-ink bg-honey px-4 py-1.5 font-display text-xs font-bold shadow-[3px_3px_0_0_#1c1a17] transition-all duration-300 group-hover:bg-purple-300 group-hover:shadow-[4px_5px_0_0_#7c3aed] sm:text-sm">
+                    Bắt đầu →
                   </span>
-                  <span className="font-display text-2xl font-extrabold sm:text-3xl">
-                    {jar.label}
-                  </span>
-                  {!jar.available && (
-                    <span className="rounded-full border-[3px] border-ink/20 bg-cream px-4 py-1.5 font-display text-sm font-bold text-ink-soft">
-                      Sắp có
-                    </span>
-                  )}
-                  {jar.available && (
-                    <span className="rounded-full border-[3px] border-ink bg-honey px-5 py-2 font-display text-base font-bold shadow-[3px_3px_0_0_#1c1a17] transition-all duration-300 group-hover:bg-honey-deep group-hover:shadow-[4px_5px_0_0_#1c1a17]">
-                      Bắt đầu →
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
+                )}
+              </button>
+            ))}
           </div>
 
           <div className="mt-14 flex items-center justify-center gap-2 font-display text-lg font-bold text-ink-soft">
