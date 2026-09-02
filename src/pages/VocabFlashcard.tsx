@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import type { VocabUnit, VocabWord, KanjiInfo, RadicalInfo } from "../data/vocabData"
 import { fetchUnitWords } from "../data/supabaseApi"
+import { Shine } from "../components/SharedUI"
 
 type StudyMode = "meaning" | "reading" | "word"
 
@@ -292,11 +293,11 @@ export default function VocabFlashcard({
   const isBackKanji = mode === "word"
 
   return (
-    <div className="fixed inset-0 z-40 flex flex-col bg-ink font-body text-cream">
+    <div className="fixed inset-0 z-40 flex flex-col bg-cream font-body text-ink">
       <div className="flex items-center justify-between gap-3 px-4 py-3 sm:px-8 sm:py-4">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 font-display text-base font-bold text-cream/60 transition-colors hover:text-honey sm:text-lg"
+          className="flex items-center gap-2 font-display text-base font-bold text-ink/60 transition-colors hover:text-ink sm:text-lg"
         >
           ← Quay lại
         </button>
@@ -308,7 +309,7 @@ export default function VocabFlashcard({
           >
             本
           </span>
-          <span className="font-display text-sm font-bold text-cream/70 sm:text-base">
+          <span className="font-display text-sm font-bold text-ink-soft sm:text-base">
             {bookTitle} · {unit.name}
           </span>
         </div>
@@ -316,21 +317,21 @@ export default function VocabFlashcard({
         <div className="flex items-center gap-3">
           <button
             onClick={toggleFullscreen}
-            className="grid h-8 w-8 place-items-center rounded-full border-[2px] border-cream/20 bg-white/10 text-cream transition-all hover:border-honey hover:bg-honey/20 sm:h-9 sm:w-9"
+            className="grid h-8 w-8 place-items-center rounded-full border-[2px] border-ink/20 bg-ink/5 text-ink transition-all hover:border-ink hover:bg-ink hover:text-cream sm:h-9 sm:w-9"
             title="Toàn màn hình"
           >
             ⛶
           </button>
           <button
             onClick={() => setShowModeSelect((s) => !s)}
-            className="rounded-full border-[2px] border-cream/20 bg-white/10 px-3 py-1.5 font-display text-sm font-bold text-cream transition-all hover:border-honey hover:bg-honey/20 sm:px-4"
+            className="rounded-full border-[2px] border-ink/20 bg-ink/5 px-3 py-1.5 font-display text-sm font-bold text-ink transition-all hover:border-ink hover:bg-ink hover:text-cream sm:px-4"
           >
             {STUDY_MODES.find((m) => m.id === mode)?.icon}{" "}
             <span className="hidden sm:inline">
               {STUDY_MODES.find((m) => m.id === mode)?.label}
             </span>
           </button>
-          <span className="font-display text-sm font-bold text-cream/40">
+          <span className="font-display text-sm font-bold text-ink/40">
             {i + 1}/{words.length}
           </span>
         </div>
@@ -438,25 +439,20 @@ export default function VocabFlashcard({
           </div>
         </div>
 
-        <div className="mt-6 flex items-center gap-4 sm:mt-8">
+        <div className="mt-8 flex items-center gap-6">
           <button
             onClick={(e) => { e.stopPropagation(); prev() }}
-            className="grid h-12 w-12 place-items-center rounded-full border-[3px] border-cream/20 bg-white/10 font-display text-xl font-bold text-cream transition-all hover:border-honey hover:bg-honey/20 active:scale-90 sm:h-14 sm:w-14"
+            className="flex h-12 w-12 items-center justify-center rounded-full border-[3px] border-ink bg-white font-display text-xl font-bold text-ink shadow-[4px_4px_0_0_#1c1a17] transition-all hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_#1c1a17] active:translate-y-0.5 active:shadow-[2px_2px_0_0_#1c1a17] sm:h-14 sm:w-14"
           >
             ←
           </button>
 
-          <div className="flex gap-1">
+          <div className="flex gap-1.5">
             {words.map((_, idx) => (
-              <button
+              <span
                 key={idx}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setFlipped(false)
-                  setI(idx)
-                }}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  idx === i ? "w-6 bg-honey" : "w-2 bg-cream/20 hover:bg-cream/40"
+                className={`h-2.5 rounded-full transition-all duration-300 ${
+                  idx === i ? "w-7 bg-ink" : "w-2.5 bg-ink/25"
                 }`}
               />
             ))}
@@ -464,9 +460,10 @@ export default function VocabFlashcard({
 
           <button
             onClick={(e) => { e.stopPropagation(); next() }}
-            className="grid h-12 w-12 place-items-center rounded-full border-[3px] border-honey bg-honey font-display text-xl font-bold text-ink shadow-[0_4px_15px_rgba(255,195,43,0.3)] transition-all hover:scale-105 hover:shadow-[0_6px_20px_rgba(255,195,43,0.4)] active:scale-90 sm:h-14 sm:w-14"
+            className="animate-wobble relative overflow-hidden rounded-full border-[3px] border-ink bg-honey px-7 py-2.5 font-display text-lg font-bold text-ink shadow-[4px_4px_0_0_#1c1a17] transition-all hover:-translate-y-0.5 hover:shadow-[6px_7px_0_0_#1c1a17] active:translate-y-0.5 active:shadow-[2px_2px_0_0_#1c1a17]"
           >
-            →
+            <Shine />
+            Tiếp →
           </button>
         </div>
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import type { RadicalInfo } from "../data/vocabData"
+import { Shine } from "../components/SharedUI"
 
 export default function RadicalFlashcard({
   strokes,
@@ -62,11 +63,11 @@ export default function RadicalFlashcard({
   const prev = () => goTo((i - 1 + radicals.length) % radicals.length)
 
   return (
-    <div className="fixed inset-0 z-40 flex flex-col bg-ink font-body text-cream">
+    <div className="fixed inset-0 z-40 flex flex-col bg-cream font-body text-ink">
       <div className="flex items-center justify-between gap-3 px-4 py-3 sm:px-8 sm:py-4">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 font-display text-base font-bold text-cream/60 transition-colors hover:text-purple-400 sm:text-lg"
+          className="flex items-center gap-2 font-display text-base font-bold text-ink/60 transition-colors hover:text-ink sm:text-lg"
         >
           ← Quay lại
         </button>
@@ -74,13 +75,13 @@ export default function RadicalFlashcard({
         <div className="flex items-center gap-3">
           <button
             onClick={toggleFullscreen}
-            className="hidden items-center gap-2 rounded-full border-[2px] border-cream/20 bg-white/5 px-4 py-1.5 font-display text-sm font-bold text-cream transition-colors hover:bg-white/10 hover:text-white sm:flex"
+            className="hidden items-center gap-2 rounded-full border-[2px] border-ink/20 bg-ink/5 px-4 py-1.5 font-display text-sm font-bold text-ink transition-colors hover:border-ink hover:bg-ink hover:text-cream sm:flex"
             title="Bật / tắt toàn màn hình (phím F)"
           >
             ⛶ Toàn màn hình
           </button>
           
-          <div className="flex items-center gap-2 rounded-full border-[2px] border-purple-400/30 bg-purple-400/10 px-4 py-1.5 font-display text-sm font-bold text-purple-400">
+          <div className="flex items-center gap-2 rounded-full border-[2px] border-ink bg-purple-200 px-4 py-1.5 font-display text-sm font-bold text-ink shadow-[2px_2px_0_0_#1c1a17]">
             <span className="font-extrabold">Bộ {strokes} nét</span>
           </div>
         </div>
@@ -132,26 +133,32 @@ export default function RadicalFlashcard({
         </div>
 
         {/* Navigation & Progress Tracker */}
-        <div className="absolute bottom-6 left-0 right-0 flex justify-center px-4 sm:bottom-10">
-          <div className="flex items-center gap-4 sm:gap-8 rounded-full border-[3px] border-cream/10 bg-black/40 p-2 sm:p-3 backdrop-blur-md">
-            <button
-              onClick={prev}
-              className="grid h-12 w-12 place-items-center rounded-full border-[3px] border-transparent bg-white/10 font-display text-xl font-bold text-white transition-all hover:border-white/30 hover:bg-white/20 active:scale-95 sm:h-14 sm:w-14"
-            >
-              ←
-            </button>
-            <div className="flex items-center gap-2 font-display text-lg font-bold text-cream/60 sm:text-xl">
-              <span className="text-white">{i + 1}</span>
-              <span className="opacity-50">/</span>
-              <span>{radicals.length}</span>
-            </div>
-            <button
-              onClick={next}
-              className="grid h-12 w-12 place-items-center rounded-full border-[3px] border-transparent bg-purple-500 font-display text-xl font-bold text-ink transition-all hover:bg-purple-400 hover:shadow-[0_0_15px_rgba(192,132,252,0.5)] active:scale-95 sm:h-14 sm:w-14"
-            >
-              →
-            </button>
+        <div className="mt-8 flex items-center justify-center gap-6">
+          <button
+            onClick={(e) => { e.stopPropagation(); prev() }}
+            className="flex h-12 w-12 items-center justify-center rounded-full border-[3px] border-ink bg-white font-display text-xl font-bold text-ink shadow-[4px_4px_0_0_#1c1a17] transition-all hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_#1c1a17] active:translate-y-0.5 active:shadow-[2px_2px_0_0_#1c1a17] sm:h-14 sm:w-14"
+          >
+            ←
+          </button>
+
+          <div className="flex gap-1.5">
+            {radicals.map((_, idx) => (
+              <span
+                key={idx}
+                className={`h-2.5 rounded-full transition-all duration-300 ${
+                  idx === i ? "w-7 bg-ink" : "w-2.5 bg-ink/25"
+                }`}
+              />
+            ))}
           </div>
+
+          <button
+            onClick={(e) => { e.stopPropagation(); next() }}
+            className="animate-wobble relative overflow-hidden rounded-full border-[3px] border-ink bg-honey px-7 py-2.5 font-display text-lg font-bold text-ink shadow-[4px_4px_0_0_#1c1a17] transition-all hover:-translate-y-0.5 hover:shadow-[6px_7px_0_0_#1c1a17] active:translate-y-0.5 active:shadow-[2px_2px_0_0_#1c1a17]"
+          >
+            <Shine />
+            Tiếp →
+          </button>
         </div>
       </div>
     </div>
