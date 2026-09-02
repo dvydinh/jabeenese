@@ -56,7 +56,7 @@ export default function RadicalSelectionPage({
               <button
                 key={group.strokes}
                 onClick={() => onSelectGroup(group.strokes, group.radicals)}
-                className="group flex flex-col items-start gap-3 rounded-[2rem] border-[4px] border-ink bg-white p-7 text-left shadow-[6px_6px_0_0_#1c1a17] transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_12px_0_0_#a78bfa]"
+                className="group flex flex-col items-start gap-3 rounded-[2rem] border-[4px] border-ink bg-cream p-7 text-left shadow-[6px_6px_0_0_#1c1a17] transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_12px_0_0_#a78bfa]"
                 style={{ animationDelay: `${(idx % 10) * 80}ms` }}
               >
                 <div

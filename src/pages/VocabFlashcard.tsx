@@ -49,7 +49,7 @@ function RadicalPopup({
       onClick={onClose}
     >
       <div
-        className="kanji-popup w-full max-w-sm rounded-[2.5rem] border-[5px] border-ink bg-white p-8 shadow-[10px_12px_0_0_#a78bfa] sm:p-10"
+        className="kanji-popup w-full max-w-sm rounded-[2.5rem] border-[5px] border-ink bg-cream p-8 shadow-[10px_12px_0_0_#a78bfa] sm:p-10"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-center">
@@ -70,7 +70,7 @@ function RadicalPopup({
           </div>
           
           {info.note && (
-            <div className="rounded-2xl border-[3px] border-ink bg-white p-4">
+            <div className="rounded-2xl border-[3px] border-ink bg-cream p-4">
               <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">Ghi chú</span>
               <p className="mt-1 font-body text-base font-medium text-ink">{info.note}</p>
             </div>
@@ -97,7 +97,7 @@ function KanjiPopup({
         onClick={onClose}
       >
         <div
-          className="kanji-popup w-full max-w-md max-h-[90vh] overflow-y-auto rounded-[2.5rem] border-[5px] border-ink bg-white p-6 shadow-[10px_12px_0_0_#f5a623] sm:p-8"
+          className="kanji-popup w-full max-w-md max-h-[90vh] overflow-y-auto rounded-[2.5rem] border-[5px] border-ink bg-cream p-6 shadow-[10px_12px_0_0_#f5a623] sm:p-8"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-center">
@@ -118,7 +118,7 @@ function KanjiPopup({
               </div>
             </div>
 
-            <div className="rounded-2xl border-[3px] border-ink bg-white p-4">
+            <div className="rounded-2xl border-[3px] border-ink bg-cream p-4">
               <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">
                 Bộ thủ (bấm để xem chi tiết)
               </span>
@@ -139,7 +139,7 @@ function KanjiPopup({
               </div>
             </div>
 
-            <div className="rounded-2xl border-[3px] border-ink bg-white p-4">
+            <div className="rounded-2xl border-[3px] border-ink bg-cream p-4">
               <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">
                 Câu chuyện ghi nhớ
               </span>
@@ -343,7 +343,7 @@ export default function VocabFlashcard({
             onClick={() => setShowModeSelect(false)}
           />
           <div className="absolute left-0 right-0 top-14 z-50 mx-auto w-full max-w-md px-4 sm:top-16">
-            <div className="rounded-[2rem] border-[4px] border-ink bg-white p-4 text-ink shadow-[8px_8px_0_0_#f5a623]">
+            <div className="rounded-[2rem] border-[4px] border-ink bg-cream p-4 text-ink shadow-[8px_8px_0_0_#f5a623]">
               <p className="mb-3 text-center font-display text-lg font-extrabold">
                 Chọn chế độ học
               </p>

@@ -58,7 +58,7 @@ export default function VocabularyPage({
               <button
                 key={unit.id}
                 onClick={() => onSelectUnit(selectedBook, unit)}
-                className="book-card group flex flex-col items-start gap-3 rounded-[2rem] border-[4px] border-ink bg-white p-7 text-left shadow-[6px_6px_0_0_#1c1a17] transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_12px_0_0_#f5a623]"
+                className="book-card group flex flex-col items-start gap-3 rounded-[2rem] border-[4px] border-ink bg-cream p-7 text-left shadow-[6px_6px_0_0_#1c1a17] transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_12px_0_0_#f5a623]"
                 style={{ animationDelay: `${idx * 100}ms` }}
               >
                 <div
@@ -123,7 +123,7 @@ export default function VocabularyPage({
                 <button
                   key={book.id}
                   onClick={() => setSelectedBook(book)}
-                className="book-card group flex gap-5 rounded-[2rem] border-[4px] border-ink bg-white p-6 text-left shadow-[6px_6px_0_0_#1c1a17] transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_12px_0_0_#f5a623]"
+                className="book-card group flex gap-5 rounded-[2rem] border-[4px] border-ink bg-cream p-6 text-left shadow-[6px_6px_0_0_#1c1a17] transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_12px_0_0_#f5a623]"
                 style={{ animationDelay: `${idx * 100}ms` }}
               >
                 <div

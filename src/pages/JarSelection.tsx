@@ -115,7 +115,7 @@ function SkillRow({
     >
       {/* Hình ảnh minh họa */}
       <div className="flex flex-1 justify-center">
-        <div className="relative flex aspect-square w-56 items-center justify-center rounded-[4rem] border-[6px] border-ink bg-white shadow-[10px_12px_0_0_#1c1a17] transition-all duration-500 hover:-translate-y-4 hover:rotate-3 hover:shadow-[16px_20px_0_0_#a78bfa] sm:w-64 lg:w-80 lg:rounded-[5rem]">
+        <div className="relative flex aspect-square w-56 items-center justify-center rounded-[4rem] border-[6px] border-ink bg-cream shadow-[10px_12px_0_0_#1c1a17] transition-all duration-500 hover:-translate-y-4 hover:rotate-3 hover:shadow-[16px_20px_0_0_#a78bfa] sm:w-64 lg:w-80 lg:rounded-[5rem]">
           <span className="text-7xl drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)] transition-transform duration-500 group-hover:scale-110 sm:text-8xl lg:text-9xl">
             {jar.emoji}
           </span>
