@@ -12,6 +12,71 @@ import type { VocabBook, VocabUnit, RadicalInfo } from "./data/vocabData"
 
 type Page = "landing" | "jars" | "vocab" | "vocab-study" | "radicals" | "radicals-study" | "hiragana" | "katakana"
 
+const demoCards = [
+  { kana: "あ", romaji: "a", word: "あめ", meaning: "rain / candy" },
+  { kana: "き", romaji: "ki", word: "きって", meaning: "postage stamp" },
+  { kana: "つ", romaji: "tsu", word: "つき", meaning: "the moon" },
+  { kana: "ね", romaji: "ne", word: "ねこ", meaning: "cat" },
+  { kana: "は", romaji: "ha", word: "はな", meaning: "flower" },
+]
+
+function DemoFlashcard() {
+  const [i, setI] = useState(0)
+  const [flipped, setFlipped] = useState(false)
+  const card = demoCards[i]
+
+  const next = () => {
+    setFlipped(false)
+    setTimeout(() => setI((p) => (p + 1) % demoCards.length), 120)
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-6">
+      <div
+        className="relative h-64 w-full max-w-sm cursor-pointer [perspective:1200px] sm:h-72"
+        onClick={() => setFlipped((f) => !f)}
+      >
+        <div
+          className="relative h-full w-full transition-transform duration-500 [transform-style:preserve-3d]"
+          style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
+        >
+          <div className="absolute inset-0 flex flex-col items-center justify-center rounded-[2.5rem] border-[5px] border-ink bg-cream [backface-visibility:hidden] shadow-[10px_12px_0_0_#1c1a17]">
+            <span className="font-kana text-8xl font-black text-ink sm:text-9xl">{card.kana}</span>
+            <span className="mt-2 font-body text-sm font-bold uppercase tracking-[0.3em] text-ink-soft">
+              chạm để lật
+            </span>
+          </div>
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-[2.5rem] border-[5px] border-ink bg-ink text-cream [backface-visibility:hidden] shadow-[10px_12px_0_0_#f5a623]" style={{ transform: "rotateY(180deg)" }}>
+            <span className="font-display text-6xl font-extrabold text-honey sm:text-7xl">{card.romaji}</span>
+            <span className="font-kana text-3xl">{card.word}</span>
+            <span className="font-body text-base font-semibold text-honey-light">{card.meaning}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <div className="flex gap-1.5">
+          {demoCards.map((_, idx) => (
+            <span
+              key={idx}
+              className={`h-2.5 rounded-full transition-all duration-300 ${
+                idx === i ? "w-7 bg-ink" : "w-2.5 bg-ink/25"
+              }`}
+            />
+          ))}
+        </div>
+        <button
+          onClick={next}
+          className="animate-wobble relative overflow-hidden rounded-full border-[3px] border-ink bg-honey px-7 py-2.5 font-display text-lg font-bold text-ink shadow-[4px_4px_0_0_#1c1a17] transition-all hover:-translate-y-0.5 hover:shadow-[6px_7px_0_0_#1c1a17] active:translate-y-0.5 active:shadow-[2px_2px_0_0_#1c1a17]"
+        >
+          <Shine />
+          Tiếp →
+        </button>
+      </div>
+    </div>
+  )
+}
+
 const paths = [
   { id: "hiragana", jp: "ひらがな", title: "Hiragana", desc: "Bảng chữ mềm mại. Bắt đầu từ đây để đọc được mọi từ.", count: "46 chữ", bg: "bg-cream" },
   { id: "katakana", jp: "カタカナ", title: "Katakana", desc: "Bảng chữ góc cạnh cho từ mượn, tên riêng và nhấn mạnh.", count: "46 chữ", bg: "bg-honey-light" },
@@ -259,7 +324,6 @@ export default function App() {
               alert("Tính năng học Kanji theo lộ trình đang được xây dựng. Coming soon! 🚧")
             }
           }}
-          onBack={goHome}
         />
       )}
 
@@ -271,7 +335,6 @@ export default function App() {
             setPage("vocab-study")
             window.scrollTo(0, 0)
           }}
-          onBack={goToJars}
         />
       )}
 
@@ -283,7 +346,6 @@ export default function App() {
             setPage("radicals-study")
             window.scrollTo(0, 0)
           }}
-          onBack={goToJars}
         />
       )}
 
