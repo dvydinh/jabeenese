@@ -3,9 +3,11 @@ import beeImg from "./imports/bee.png"
 import JarSelection from "./pages/JarSelection"
 import VocabularyPage from "./pages/VocabularyPage"
 import VocabFlashcard from "./pages/VocabFlashcard"
-import type { VocabBook, VocabUnit } from "./data/vocabData"
+import RadicalSelectionPage from "./pages/RadicalSelectionPage"
+import RadicalFlashcard from "./pages/RadicalFlashcard"
+import type { VocabBook, VocabUnit, RadicalInfo } from "./data/vocabData"
 
-type Page = "landing" | "jars" | "vocab" | "vocab-study"
+type Page = "landing" | "jars" | "vocab" | "vocab-study" | "radicals" | "radicals-study"
 
 function Shine() {
   return (
@@ -340,6 +342,8 @@ export default function App() {
   const [page, setPage] = useState<Page>("landing")
   const [selectedBook, setSelectedBook] = useState<VocabBook | null>(null)
   const [selectedUnit, setSelectedUnit] = useState<VocabUnit | null>(null)
+  const [selectedStrokes, setSelectedStrokes] = useState<number | null>(null)
+  const [selectedRadicalsList, setSelectedRadicalsList] = useState<RadicalInfo[]>([])
 
   const goToJars = () => {
     setPage("jars")
@@ -357,6 +361,9 @@ export default function App() {
         onSelect={(id) => {
           if (id === "vocabulary") {
             setPage("vocab")
+            window.scrollTo(0, 0)
+          } else if (id === "radicals") {
+            setPage("radicals")
             window.scrollTo(0, 0)
           }
         }}
@@ -379,6 +386,20 @@ export default function App() {
     )
   }
 
+  if (page === "radicals") {
+    return (
+      <RadicalSelectionPage
+        onSelectGroup={(strokes, radicals) => {
+          setSelectedStrokes(strokes)
+          setSelectedRadicalsList(radicals)
+          setPage("radicals-study")
+          window.scrollTo(0, 0)
+        }}
+        onBack={goToJars}
+      />
+    )
+  }
+
   if (page === "vocab-study" && selectedBook && selectedUnit) {
     return (
       <VocabFlashcard
@@ -389,6 +410,19 @@ export default function App() {
         bookTitle={selectedBook.title}
         onBack={() => {
           setPage("vocab")
+          window.scrollTo(0, 0)
+        }}
+      />
+    )
+  }
+
+  if (page === "radicals-study" && selectedStrokes !== null) {
+    return (
+      <RadicalFlashcard
+        strokes={selectedStrokes}
+        radicals={selectedRadicalsList}
+        onBack={() => {
+          setPage("radicals")
           window.scrollTo(0, 0)
         }}
       />

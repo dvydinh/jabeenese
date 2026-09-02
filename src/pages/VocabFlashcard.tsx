@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import type { VocabUnit, VocabWord, KanjiInfo } from "../data/vocabData"
+import type { VocabUnit, VocabWord, KanjiInfo, RadicalInfo } from "../data/vocabData"
 import { fetchUnitWords } from "../data/supabaseApi"
 
 type StudyMode = "meaning" | "reading" | "word"
@@ -36,6 +36,51 @@ function getFrontBack(word: VocabWord, mode: StudyMode) {
   }
 }
 
+function RadicalPopup({
+  info,
+  onClose,
+}: {
+  info: RadicalInfo
+  onClose: () => void
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-ink/60 p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="kanji-popup w-full max-w-sm rounded-[2.5rem] border-[5px] border-ink bg-white p-8 shadow-[10px_12px_0_0_#a78bfa] sm:p-10"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-center">
+          <span className="font-kana text-7xl font-black text-ink sm:text-8xl">
+            {info.bo}
+          </span>
+        </div>
+        
+        <div className="mt-6 space-y-4">
+          <div className="rounded-2xl border-[3px] border-ink bg-purple-100 p-4">
+            <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">Tên bộ</span>
+            <p className="mt-1 font-display text-xl font-bold text-ink">{info.ten_bo}</p>
+          </div>
+          
+          <div className="rounded-2xl border-[3px] border-ink bg-cream p-4">
+            <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">Nghĩa</span>
+            <p className="mt-1 font-display text-xl font-bold text-ink">{info.nghia}</p>
+          </div>
+          
+          {info.note && (
+            <div className="rounded-2xl border-[3px] border-ink bg-white p-4">
+              <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">Ghi chú</span>
+              <p className="mt-1 font-body text-base font-medium text-ink">{info.note}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function KanjiPopup({
   info,
   onClose,
@@ -43,51 +88,73 @@ function KanjiPopup({
   info: KanjiInfo
   onClose: () => void
 }) {
+  const [selectedRadical, setSelectedRadical] = useState<RadicalInfo | null>(null)
+
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 p-4 backdrop-blur-sm"
-      onClick={onClose}
-    >
+    <>
       <div
-        className="kanji-popup w-full max-w-md rounded-[2.5rem] border-[5px] border-ink bg-white p-8 shadow-[10px_12px_0_0_#f5a623] sm:p-10"
-        onClick={(e) => e.stopPropagation()}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 p-4 backdrop-blur-sm"
+        onClick={onClose}
       >
-        <div className="flex items-center justify-center">
-          <span className="font-kana text-8xl font-black text-ink sm:text-9xl">
-            {info.character}
-          </span>
-        </div>
-
-        <div className="mt-6 space-y-5">
-          <div className="rounded-2xl border-[3px] border-ink bg-honey-light p-5">
-            <span className="font-display text-sm font-bold uppercase tracking-widest text-ink-soft">
-              Hán Việt
+        <div
+          className="kanji-popup w-full max-w-md max-h-[90vh] overflow-y-auto rounded-[2.5rem] border-[5px] border-ink bg-white p-6 shadow-[10px_12px_0_0_#f5a623] sm:p-8"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-center">
+            <span className="font-kana text-7xl font-black text-ink sm:text-8xl">
+              {info.character}
             </span>
-            <p className="mt-1 font-display text-3xl font-extrabold text-ink">
-              {info.hanViet}
-            </p>
           </div>
 
-          <div className="rounded-2xl border-[3px] border-ink bg-cream p-5">
-            <span className="font-display text-sm font-bold uppercase tracking-widest text-ink-soft">
-              Bộ thủ
-            </span>
-            <p className="mt-1 font-display text-xl font-bold text-ink">
-              {info.radical}
-            </p>
-          </div>
+          <div className="mt-6 space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="rounded-2xl border-[3px] border-ink bg-honey-light p-4">
+                <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">Hán Việt</span>
+                <p className="mt-1 font-display text-2xl font-extrabold text-ink">{info.hanViet}</p>
+              </div>
+              <div className="rounded-2xl border-[3px] border-ink bg-cream p-4">
+                <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">Nghĩa</span>
+                <p className="mt-1 font-display text-xl font-bold text-ink">{info.nghia}</p>
+              </div>
+            </div>
 
-          <div className="rounded-2xl border-[3px] border-ink bg-white p-5">
-            <span className="font-display text-sm font-bold uppercase tracking-widest text-ink-soft">
-              Câu chuyện ghi nhớ
-            </span>
-            <p className="mt-2 font-body text-lg font-medium leading-relaxed text-ink">
-              {info.story}
-            </p>
+            <div className="rounded-2xl border-[3px] border-ink bg-white p-4">
+              <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">
+                Bộ thủ (bấm để xem chi tiết)
+              </span>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {info.radicals && info.radicals.map((rad) => (
+                  <button
+                    key={rad.id}
+                    onClick={() => setSelectedRadical(rad)}
+                    className="flex items-center gap-2 rounded-xl border-[2px] border-ink bg-purple-100 px-3 py-1.5 transition-all hover:-translate-y-1 hover:shadow-[3px_4px_0_0_#1c1a17] active:translate-y-0 active:shadow-none"
+                  >
+                    <span className="font-kana text-xl font-black text-ink">{rad.bo}</span>
+                    <span className="font-body text-sm font-semibold text-ink-soft">{rad.ten_bo}</span>
+                  </button>
+                ))}
+                {(!info.radicals || info.radicals.length === 0) && (
+                  <span className="text-ink-soft italic text-sm">Chưa có dữ liệu bộ thủ</span>
+                )}
+              </div>
+            </div>
+
+            <div className="rounded-2xl border-[3px] border-ink bg-white p-4">
+              <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">
+                Câu chuyện ghi nhớ
+              </span>
+              <p className="mt-2 font-body text-base font-medium leading-relaxed text-ink">
+                {info.story}
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      
+      {selectedRadical && (
+        <RadicalPopup info={selectedRadical} onClose={() => setSelectedRadical(null)} />
+      )}
+    </>
   )
 }
 

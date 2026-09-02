@@ -10,8 +10,9 @@ type JarItem = {
 
 const jars: JarItem[] = [
   { id: "vocabulary", label: "Từ vựng", jp: "語彙", emoji: "🍯", available: true },
+  { id: "radicals", label: "Bộ thủ", jp: "部首", emoji: "🫕", available: true },
   { id: "grammar", label: "Ngữ pháp", jp: "文法", emoji: "🧈", available: false },
-  { id: "kanji", label: "Kanji", jp: "漢字", emoji: "🫕", available: false },
+  { id: "kanji", label: "Kanji", jp: "漢字", emoji: "🍱", available: false },
   { id: "reading", label: "Đọc hiểu", jp: "読解", emoji: "📖", available: false },
   { id: "listening", label: "Nghe hiểu", jp: "聴解", emoji: "🎧", available: false },
 ]

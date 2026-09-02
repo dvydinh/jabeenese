@@ -1,7 +1,18 @@
+export type RadicalInfo = {
+  id: number
+  bo: string
+  ten_bo: string
+  nghia: string
+  note: string
+  so_net: number
+}
+
 export type KanjiInfo = {
   character: string
   hanViet: string
-  radical: string
+  radical?: string
+  nghia?: string
+  radicals?: RadicalInfo[]
   story: string
 }
 

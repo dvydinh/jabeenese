@@ -64,10 +64,10 @@ export async function fetchUnitWords(sachId: string, unitNum: number): Promise<V
         id, tu_vung, cach_doc, nghia,
         tuvung_hantu_link (
           hantu (
-            id, chukanji, amhanviet, note,
+            id, chukanji, amhanviet, nghia, note,
             hantu_bothu_link (
               bothu (
-                bo, nghia
+                id, bo, ten_bo, nghia, note, so_net
               )
             )
           )
@@ -89,13 +89,12 @@ export async function fetchUnitWords(sachId: string, unitNum: number): Promise<V
       const radicals = (h.hantu_bothu_link || [])
         .map((link: any) => link.bothu)
         .filter(Boolean)
-        .map((b: any) => `${b.bo} (${b.nghia})`)
-        .join(', ')
 
       return {
         character: h.chukanji,
         hanViet: h.amhanviet,
-        radical: radicals,
+        nghia: h.nghia || '',
+        radicals: radicals,
         story: h.note
       } as KanjiInfo
     })
@@ -107,4 +106,33 @@ export async function fetchUnitWords(sachId: string, unitNum: number): Promise<V
       kanji: kanjiList.length > 0 ? kanjiList : undefined
     } as VocabWord
   })
+}
+
+export type RadicalGroup = {
+  strokes: number
+  radicals: any[]
+}
+
+export async function fetchRadicalsGroupedByStrokes(): Promise<RadicalGroup[]> {
+  const { data, error } = await supabase
+    .from('bothu')
+    .select('id, bo, ten_bo, nghia, note, so_net, stt')
+    .order('so_net', { ascending: true })
+    .order('stt', { ascending: true })
+    
+  if (error) {
+    console.error('Error fetching radicals:', error)
+    return []
+  }
+
+  const groups = new Map<number, any[]>()
+  data.forEach((r: any) => {
+    const s = r.so_net || 0
+    if (!groups.has(s)) groups.set(s, [])
+    groups.get(s)!.push(r)
+  })
+
+  return Array.from(groups.entries())
+    .map(([strokes, radicals]) => ({ strokes, radicals }))
+    .sort((a, b) => a.strokes - b.strokes)
 }
