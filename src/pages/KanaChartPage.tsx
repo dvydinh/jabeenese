@@ -22,7 +22,7 @@ export default function KanaChartPage({ type }: { type: "hiragana" | "katakana" 
         <div className="mt-12 overflow-x-auto pb-8">
           <div className="inline-flex flex-col gap-4 min-w-max">
             {/* Header row (A I U E O) */}
-            <div className="grid grid-cols-[3rem_repeat(5,4.5rem)] gap-3 sm:grid-cols-[4rem_repeat(5,5.5rem)] sm:gap-4 lg:grid-cols-[4rem_repeat(5,6rem)]">
+            <div className="grid grid-cols-[3rem_repeat(5,5.5rem)] gap-4 sm:grid-cols-[4rem_repeat(5,7rem)] sm:gap-5 lg:grid-cols-[5rem_repeat(5,9rem)] lg:gap-6">
               <div /> {/* Empty top-left cell */}
               {["a", "i", "u", "e", "o"].map(vowel => (
                 <div key={vowel} className="flex justify-center font-display text-xl font-bold uppercase text-ink/40">
@@ -42,7 +42,7 @@ export default function KanaChartPage({ type }: { type: "hiragana" | "katakana" 
               if (rIdx === 10) consonant = "n" // n row
 
               return (
-                <div key={rIdx} className="grid grid-cols-[3rem_repeat(5,4.5rem)] gap-3 sm:grid-cols-[4rem_repeat(5,5.5rem)] sm:gap-4 lg:grid-cols-[4rem_repeat(5,6rem)]">
+                <div key={rIdx} className="grid grid-cols-[3rem_repeat(5,5.5rem)] gap-4 sm:grid-cols-[4rem_repeat(5,7rem)] sm:gap-5 lg:grid-cols-[5rem_repeat(5,9rem)] lg:gap-6">
                   {/* Row label */}
                   <div className="flex items-center justify-center font-display text-xl font-bold uppercase text-ink/40">
                     {consonant}
@@ -58,10 +58,10 @@ export default function KanaChartPage({ type }: { type: "hiragana" | "katakana" 
                         className="group relative flex aspect-square flex-col items-center justify-center overflow-hidden rounded-[2rem] border-[5px] border-ink bg-white shadow-[6px_6px_0_0_#1c1a17] transition-all duration-300 hover:-translate-y-2 hover:-rotate-3 hover:bg-honey hover:shadow-[10px_12px_0_0_#1c1a17] active:translate-y-0 active:rotate-0 active:shadow-[2px_2px_0_0_#1c1a17]"
                       >
                         <div className="absolute -left-10 -top-10 h-24 w-24 rounded-full bg-white/40 opacity-0 blur-md transition-opacity group-hover:opacity-100" />
-                        <span className="font-kana text-4xl font-black text-ink transition-transform duration-300 group-hover:scale-110 sm:text-5xl lg:text-6xl">
+                        <span className="font-kana text-5xl font-black text-ink transition-transform duration-300 group-hover:scale-110 sm:text-6xl lg:text-[5.5rem]">
                           {char.kana}
                         </span>
-                        <span className="absolute bottom-2 font-display text-sm font-extrabold text-ink-soft transition-colors group-hover:text-ink sm:bottom-3 sm:text-base">
+                        <span className="absolute bottom-2 font-display text-base font-extrabold text-ink-soft transition-colors group-hover:text-ink sm:bottom-3 sm:text-lg lg:bottom-4 lg:text-xl">
                           {char.romaji}
                         </span>
                       </button>
