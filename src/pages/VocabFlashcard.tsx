@@ -199,14 +199,16 @@ function KanjiPopup({
               </div>
             </div>
 
-            <div className="rounded-2xl border-[3px] border-ink bg-cream p-4">
-              <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">
-                Câu chuyện ghi nhớ
-              </span>
-              <p className="mt-2 font-body text-base font-medium leading-relaxed text-ink">
-                {info.story}
-              </p>
-            </div>
+            {info.story && (
+              <div className="rounded-2xl border-[3px] border-ink bg-cream p-4">
+                <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">
+                  {info.radicals?.length === 1 ? 'Liên tưởng hình dáng' : 'Câu chuyện ghi nhớ'}
+                </span>
+                <p className="mt-2 font-body text-base font-medium leading-relaxed text-ink">
+                  {info.story}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
