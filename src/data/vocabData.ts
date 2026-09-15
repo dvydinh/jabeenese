@@ -5,6 +5,7 @@ export type RadicalInfo = {
   nghia: string
   note: string
   so_net: number
+  sub_radicals?: RadicalInfo[]
 }
 
 export type KanjiInfo = {

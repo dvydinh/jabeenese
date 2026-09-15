@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import type { VocabUnit, VocabWord, KanjiInfo, RadicalInfo } from "../data/vocabData"
-import { fetchUnitWords } from "../data/supabaseApi"
+import { fetchUnitWords, fetchRadicalChildren } from "../data/supabaseApi"
 import { Shine } from "../components/SharedUI"
 
 type StudyMode = "meaning" | "reading" | "word"
@@ -40,45 +40,104 @@ function getFrontBack(word: VocabWord, mode: StudyMode) {
 function RadicalPopup({
   info,
   onClose,
+  depth = 0,
 }: {
   info: RadicalInfo
   onClose: () => void
+  depth?: number
 }) {
+  const [subRadicals, setSubRadicals] = useState<RadicalInfo[]>([])
+  const [loading, setLoading] = useState(true)
+  const [selectedSubRadical, setSelectedSubRadical] = useState<RadicalInfo | null>(null)
+
+  useEffect(() => {
+    fetchRadicalChildren(info.id).then((children) => {
+      setSubRadicals(children)
+      setLoading(false)
+    })
+  }, [info.id])
+
+  const hasChildren = subRadicals.length > 0
+  const zIndex = 60 + depth * 10
+
   return (
-    <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-ink/60 p-4 backdrop-blur-sm"
-      onClick={onClose}
-    >
+    <>
       <div
-        className="kanji-popup w-full max-w-sm rounded-[2.5rem] border-[5px] border-ink bg-cream p-8 shadow-[10px_12px_0_0_#f5a623] sm:p-10"
-        onClick={(e) => e.stopPropagation()}
+        className="fixed inset-0 flex items-center justify-center bg-ink/60 p-4 backdrop-blur-sm"
+        style={{ zIndex }}
+        onClick={onClose}
       >
-        <div className="flex items-center justify-center">
-          <span className="font-kana text-7xl font-black text-ink sm:text-8xl">
-            {info.bo}
-          </span>
-        </div>
-        
-        <div className="mt-6 space-y-4">
-          <div className="rounded-2xl border-[3px] border-ink bg-purple-100 p-4">
-            <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">Tên bộ</span>
-            <p className="mt-1 font-display text-xl font-bold text-ink">{info.ten_bo}</p>
+        <div
+          className="kanji-popup w-full max-w-sm max-h-[90vh] overflow-y-auto rounded-[2.5rem] border-[5px] border-ink bg-cream p-8 shadow-[10px_12px_0_0_#f5a623] sm:p-10"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-center">
+            <span className="font-kana text-7xl font-black text-ink sm:text-8xl">
+              {info.bo}
+            </span>
           </div>
           
-          <div className="rounded-2xl border-[3px] border-ink bg-cream p-4">
-            <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">Nghĩa</span>
-            <p className="mt-1 font-display text-xl font-bold text-ink">{info.nghia}</p>
-          </div>
-          
-          {info.note && (
-            <div className="rounded-2xl border-[3px] border-ink bg-cream p-4">
-              <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">Ghi chú</span>
-              <p className="mt-1 font-body text-base font-medium text-ink">{info.note}</p>
+          <div className="mt-6 space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="rounded-2xl border-[3px] border-ink bg-purple-100 p-4">
+                <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">Tên bộ</span>
+                <p className="mt-1 font-display text-xl font-bold text-ink">{info.ten_bo}</p>
+              </div>
+              <div className="rounded-2xl border-[3px] border-ink bg-cream p-4">
+                <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">Nghĩa</span>
+                <p className="mt-1 font-display text-xl font-bold text-ink">{info.nghia}</p>
+              </div>
             </div>
-          )}
+
+            {/* Sub-radicals section - only show if has children */}
+            {!loading && hasChildren && (
+              <div className="rounded-2xl border-[3px] border-ink bg-cream p-4">
+                <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">
+                  Bộ con (bấm để xem chi tiết)
+                </span>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {subRadicals.map((rad) => (
+                    <button
+                      key={rad.id}
+                      onClick={() => setSelectedSubRadical(rad)}
+                      className="flex items-center gap-2 rounded-xl border-[2px] border-ink bg-purple-100 px-3 py-1.5 transition-all hover:-translate-y-1 hover:shadow-[3px_4px_0_0_#1c1a17] active:translate-y-0 active:shadow-none"
+                    >
+                      <span className="font-kana text-xl font-black text-ink">{rad.bo}</span>
+                      <span className="font-body text-sm font-semibold text-ink-soft">{rad.ten_bo}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Loading indicator */}
+            {loading && (
+              <div className="flex justify-center py-2">
+                <div className="h-5 w-5 animate-spin rounded-full border-[3px] border-ink/20 border-t-honey" />
+              </div>
+            )}
+            
+            {info.note && (
+              <div className="rounded-2xl border-[3px] border-ink bg-cream p-4">
+                <span className="font-display text-xs font-bold uppercase tracking-widest text-ink-soft">
+                  {hasChildren ? 'Câu chuyện ghi nhớ' : 'Liên tưởng hình dáng'}
+                </span>
+                <p className="mt-1 font-body text-base font-medium text-ink">{info.note}</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Recursive sub-radical popup */}
+      {selectedSubRadical && (
+        <RadicalPopup
+          info={selectedSubRadical}
+          onClose={() => setSelectedSubRadical(null)}
+          depth={depth + 1}
+        />
+      )}
+    </>
   )
 }
 

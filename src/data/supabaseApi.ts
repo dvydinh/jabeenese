@@ -136,3 +136,23 @@ export async function fetchRadicalsGroupedByStrokes(): Promise<RadicalGroup[]> {
     .map(([strokes, radicals]) => ({ strokes, radicals }))
     .sort((a, b) => a.strokes - b.strokes)
 }
+
+export async function fetchRadicalChildren(bothuId: number): Promise<any[]> {
+  const { data, error } = await supabase
+    .from('bothu_bothu_link')
+    .select(`
+      bothu_con:bothu_con_id (
+        id, bo, ten_bo, nghia, note, so_net
+      )
+    `)
+    .eq('bothu_cha_id', bothuId)
+
+  if (error) {
+    // Table might not exist yet, silently return empty
+    return []
+  }
+
+  return (data || [])
+    .map((link: any) => link.bothu_con)
+    .filter(Boolean)
+}
