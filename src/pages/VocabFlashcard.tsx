@@ -442,14 +442,14 @@ export default function VocabFlashcard({
           onClick={() => setFlipped((f) => !f)}
         >
           <div
-            className="relative h-full w-full transition-transform duration-500 [transform-style:preserve-3d]"
+            className="relative h-full w-full transition-transform duration-500 [transform-style:preserve-3d] [-webkit-transform-style:preserve-3d]"
             style={{
               transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
               transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)",
             }}
           >
             <div
-              className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-[3rem] border-[5px] border-ink bg-cream p-8 [backface-visibility:hidden] shadow-[10px_12px_0_0_#1c1a17]"
+              className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-[3rem] border-[5px] border-ink bg-cream p-8 [backface-visibility:hidden] [-webkit-backface-visibility:hidden] shadow-[10px_12px_0_0_#1c1a17]"
               style={{ pointerEvents: flipped ? "none" : "auto" }}
             >
               <span className="font-kana text-6xl font-black text-ink sm:text-7xl lg:text-8xl">
@@ -480,7 +480,7 @@ export default function VocabFlashcard({
             </div>
 
             <div
-              className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-[3rem] border-[5px] border-ink bg-ink p-8 text-cream [backface-visibility:hidden] shadow-[10px_12px_0_0_#f5a623]"
+              className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-[3rem] border-[5px] border-ink bg-ink p-8 text-cream [backface-visibility:hidden] [-webkit-backface-visibility:hidden] shadow-[10px_12px_0_0_#f5a623]"
               style={{
                 transform: "rotateY(180deg)",
                 pointerEvents: flipped ? "auto" : "none"
@@ -525,15 +525,24 @@ export default function VocabFlashcard({
             ←
           </button>
 
-          <div className="flex gap-1.5">
-            {words.map((_, idx) => (
-              <span
-                key={idx}
-                className={`h-2.5 rounded-full transition-all duration-300 ${
-                  idx === i ? "w-7 bg-ink" : "w-2.5 bg-ink/25"
-                }`}
-              />
-            ))}
+          <div className="flex max-w-[50vw] overflow-hidden justify-center gap-1.5">
+            {words.length <= 20 ? (
+              words.map((_, idx) => (
+                <span
+                  key={idx}
+                  className={`h-2.5 rounded-full transition-all duration-300 ${
+                    idx === i ? "w-7 bg-ink" : "w-2.5 bg-ink/25"
+                  }`}
+                />
+              ))
+            ) : (
+              <div className="h-2.5 w-32 overflow-hidden rounded-full bg-ink/10">
+                <div
+                  className="h-full bg-ink transition-all duration-300"
+                  style={{ width: `${((i + 1) / words.length) * 100}%` }}
+                />
+              </div>
+            )}
           </div>
 
           <button
@@ -545,20 +554,22 @@ export default function VocabFlashcard({
           </button>
         </div>
 
-        <div className="absolute inset-x-0 bottom-4 flex w-full justify-center pb-2 sm:pb-4 lg:hidden pointer-events-none">
-          <div className="flex flex-wrap justify-center gap-1.5 pointer-events-auto px-4">
+        <div className="absolute inset-x-0 bottom-4 flex w-full pb-2 sm:pb-4 lg:hidden pointer-events-none">
+          <div className="flex w-full overflow-x-auto flex-nowrap gap-2 pointer-events-auto px-4 pb-2 no-scrollbar scroll-smooth">
             {words.map((w, idx) => (
               <button
                 key={idx}
+                id={`vocab-pill-${idx}`}
                 onClick={(e) => {
                   e.stopPropagation()
                   setFlipped(false)
                   setI(idx)
+                  document.getElementById(`vocab-pill-${idx}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
                 }}
-                className={`rounded-xl border-[2px] px-3 py-1.5 font-kana text-sm font-bold transition-all ${
+                className={`shrink-0 rounded-xl border-[2px] px-3 py-1.5 font-kana text-sm font-bold transition-all ${
                   idx === i
                     ? "border-honey bg-honey text-ink"
-                    : "border-cream/15 bg-white/5 text-cream/50 hover:border-cream/30 hover:bg-white/10 hover:text-cream"
+                    : "border-cream/15 bg-ink/5 text-ink/50 hover:border-ink/30 hover:bg-ink/10 hover:text-ink"
                 }`}
               >
                 {w.japanese}

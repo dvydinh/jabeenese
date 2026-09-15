@@ -93,12 +93,12 @@ export default function RadicalFlashcard({
           onClick={() => setFlipped((f) => !f)}
         >
           <div
-            className="relative h-full w-full transition-transform duration-500 [transform-style:preserve-3d]"
+            className="relative h-full w-full transition-transform duration-500 [transform-style:preserve-3d] [-webkit-transform-style:preserve-3d]"
             style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
           >
             {/* Front: Bo & Ten Bo */}
             <div
-              className="absolute inset-0 flex flex-col items-center justify-center rounded-[3rem] border-[5px] border-ink bg-cream p-8 [backface-visibility:hidden] shadow-[10px_12px_0_0_#1c1a17] sm:p-12"
+              className="absolute inset-0 flex flex-col items-center justify-center rounded-[3rem] border-[5px] border-ink bg-cream p-8 [backface-visibility:hidden] [-webkit-backface-visibility:hidden] shadow-[10px_12px_0_0_#1c1a17] sm:p-12"
               style={{ pointerEvents: flipped ? "none" : "auto" }}
             >
               <div className="flex flex-1 flex-col items-center justify-center gap-4">
@@ -116,7 +116,7 @@ export default function RadicalFlashcard({
 
             {/* Back: Nghia & Note */}
             <div
-              className="absolute inset-0 flex flex-col items-center justify-center rounded-[3rem] border-[5px] border-ink bg-ink p-8 text-cream [backface-visibility:hidden] shadow-[10px_12px_0_0_#f5a623] sm:p-12"
+              className="absolute inset-0 flex flex-col items-center justify-center rounded-[3rem] border-[5px] border-ink bg-ink p-8 text-cream [backface-visibility:hidden] [-webkit-backface-visibility:hidden] shadow-[10px_12px_0_0_#f5a623] sm:p-12"
               style={{ transform: "rotateY(180deg)", pointerEvents: flipped ? "auto" : "none" }}
             >
               <div className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
@@ -142,15 +142,24 @@ export default function RadicalFlashcard({
             ←
           </button>
 
-          <div className="flex gap-1.5">
-            {radicals.map((_, idx) => (
-              <span
-                key={idx}
-                className={`h-2.5 rounded-full transition-all duration-300 ${
-                  idx === i ? "w-7 bg-ink" : "w-2.5 bg-ink/25"
-                }`}
-              />
-            ))}
+          <div className="flex max-w-[50vw] overflow-hidden justify-center gap-1.5">
+            {radicals.length <= 20 ? (
+              radicals.map((_, idx) => (
+                <span
+                  key={idx}
+                  className={`h-2.5 rounded-full transition-all duration-300 ${
+                    idx === i ? "w-7 bg-ink" : "w-2.5 bg-ink/25"
+                  }`}
+                />
+              ))
+            ) : (
+              <div className="h-2.5 w-32 overflow-hidden rounded-full bg-ink/10">
+                <div
+                  className="h-full bg-ink transition-all duration-300"
+                  style={{ width: `${((i + 1) / radicals.length) * 100}%` }}
+                />
+              </div>
+            )}
           </div>
 
           <button
