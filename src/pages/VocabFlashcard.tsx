@@ -448,7 +448,10 @@ export default function VocabFlashcard({
               transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)",
             }}
           >
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-[3rem] border-[5px] border-ink bg-cream p-8 [backface-visibility:hidden] shadow-[10px_12px_0_0_#1c1a17]">
+            <div
+              className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-[3rem] border-[5px] border-ink bg-cream p-8 [backface-visibility:hidden] shadow-[10px_12px_0_0_#1c1a17]"
+              style={{ pointerEvents: flipped ? "none" : "auto" }}
+            >
               <span className="font-kana text-6xl font-black text-ink sm:text-7xl lg:text-8xl">
                 {frontMain}
               </span>
@@ -480,6 +483,7 @@ export default function VocabFlashcard({
               className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-[3rem] border-[5px] border-ink bg-ink p-8 text-cream [backface-visibility:hidden] shadow-[10px_12px_0_0_#f5a623]"
               style={{
                 transform: "rotateY(180deg)",
+                pointerEvents: flipped ? "auto" : "none"
               }}
             >
               {mode === "word" || mode === "reading" ? (
