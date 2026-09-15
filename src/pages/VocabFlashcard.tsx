@@ -449,17 +449,23 @@ export default function VocabFlashcard({
             }}
           >
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-[3rem] border-[5px] border-ink bg-cream p-8 [backface-visibility:hidden] shadow-[10px_12px_0_0_#1c1a17]">
-              {isFrontKanji ? (
-                <ClickableKanji
-                  text={frontMain}
-                  kanjiList={word.kanji}
-                  onKanjiClick={setPopup}
-                  className="font-kana text-7xl font-black text-ink sm:text-8xl lg:text-9xl"
-                />
-              ) : (
-                <span className="font-kana text-6xl font-black text-ink sm:text-7xl lg:text-8xl">
-                  {frontMain}
-                </span>
+              <span className="font-kana text-6xl font-black text-ink sm:text-7xl lg:text-8xl">
+                {frontMain}
+              </span>
+              
+              {isFrontKanji && word.kanji && word.kanji.length > 0 && (
+                <div className="absolute top-6 right-6 flex flex-col gap-2 z-10">
+                  {word.kanji.map((k, idx) => (
+                    <button
+                      key={idx}
+                      onClick={(e) => { e.stopPropagation(); setPopup(k) }}
+                      title="Xem chi tiết Kanji"
+                      className="flex h-10 w-10 items-center justify-center rounded-xl border-[3px] border-ink bg-white font-kana text-xl font-bold text-ink shadow-[2px_3px_0_0_#1c1a17] transition-all hover:-translate-y-0.5 hover:shadow-[3px_4px_0_0_#1c1a17] active:translate-y-0 active:shadow-none"
+                    >
+                      {k.character}
+                    </button>
+                  ))}
+                </div>
               )}
               <div className="h-[3px] w-20 rounded-full bg-ink/10" />
               <span className="font-body text-xl font-semibold text-ink-soft sm:text-2xl">
@@ -476,14 +482,7 @@ export default function VocabFlashcard({
                 transform: "rotateY(180deg)",
               }}
             >
-              {isBackKanji ? (
-                <ClickableKanji
-                  text={backMain}
-                  kanjiList={word.kanji}
-                  onKanjiClick={setPopup}
-                  className="font-kana text-7xl font-black text-honey sm:text-8xl lg:text-9xl"
-                />
-              ) : mode === "reading" ? (
+              {mode === "word" || mode === "reading" ? (
                 <span className="font-kana text-6xl font-black text-honey sm:text-7xl lg:text-8xl">
                   {backMain}
                 </span>
@@ -491,6 +490,21 @@ export default function VocabFlashcard({
                 <span className="text-center font-display text-4xl font-extrabold text-honey sm:text-5xl lg:text-6xl">
                   {backMain}
                 </span>
+              )}
+              
+              {isBackKanji && word.kanji && word.kanji.length > 0 && (
+                <div className="absolute top-6 right-6 flex flex-col gap-2 z-10">
+                  {word.kanji.map((k, idx) => (
+                    <button
+                      key={idx}
+                      onClick={(e) => { e.stopPropagation(); setPopup(k) }}
+                      title="Xem chi tiết Kanji"
+                      className="flex h-10 w-10 items-center justify-center rounded-xl border-[3px] border-ink bg-white font-kana text-xl font-bold text-ink shadow-[2px_3px_0_0_#1c1a17] transition-all hover:-translate-y-0.5 hover:shadow-[3px_4px_0_0_#1c1a17] active:translate-y-0 active:shadow-none"
+                    >
+                      {k.character}
+                    </button>
+                  ))}
+                </div>
               )}
               <span className="mt-2 font-display text-sm font-bold uppercase tracking-widest text-honey-light">
                 đã lật ✓
